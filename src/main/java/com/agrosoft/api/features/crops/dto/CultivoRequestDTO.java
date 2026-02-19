@@ -18,6 +18,8 @@ public class CultivoRequestDTO {
     private Integer diasVegetativo;
     private Integer diasFloracion;
     private Integer diasCosecha;
+    private Integer tamanoTerreno;
+    private Integer cantidadSemillas;
     private BigDecimal phSueloMin;
     private BigDecimal phSueloMax;
 }

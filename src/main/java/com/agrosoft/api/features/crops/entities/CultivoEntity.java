@@ -60,6 +60,12 @@ public class CultivoEntity {
     @Column(name = "dias_cosecha")
     private Integer diasCosecha;
 
+    @Column(name = "tamano_terreno")
+    private Integer tamanoTerreno;
+
+    @Column(name ="cantidad_semillas")
+    private Integer cantidadSemillas;
+
     @Column(name = "ph_suelo_min", precision = 3, scale = 1)
     private BigDecimal phSueloMin;
 

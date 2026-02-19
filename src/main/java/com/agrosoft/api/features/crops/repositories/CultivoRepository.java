@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface CultivoRepository extends JpaRepository<CultivoEntity, UUID> {
-
     List<CultivoEntity> findByIdUsuario(UUID idUsuario);
 }

@@ -23,6 +23,8 @@ public class CultivoMapper {
                 .diasVegetativo(dto.getDiasVegetativo())
                 .diasFloracion(dto.getDiasFloracion())
                 .diasCosecha(dto.getDiasCosecha())
+                .tamanoTerreno(dto.getTamanoTerreno())
+                .cantidadSemillas(dto.getCantidadSemillas())
                 .phSueloMin(dto.getPhSueloMin())
                 .phSueloMax(dto.getPhSueloMax())
                 .build();
@@ -42,6 +44,8 @@ public class CultivoMapper {
         entity.setDiasVegetativo(dto.getDiasVegetativo());
         entity.setDiasFloracion(dto.getDiasFloracion());
         entity.setDiasCosecha(dto.getDiasCosecha());
+        entity.setCantidadSemillas(dto.getTamanoTerreno());
+        entity.setTamanoTerreno(dto.getCantidadSemillas());
         entity.setPhSueloMin(dto.getPhSueloMin());
         entity.setPhSueloMax(dto.getPhSueloMax());
     }

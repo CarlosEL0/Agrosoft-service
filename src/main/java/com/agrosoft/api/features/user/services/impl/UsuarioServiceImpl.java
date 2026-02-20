@@ -9,6 +9,7 @@ import com.agrosoft.api.features.user.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.agrosoft.api.features.user.dto.UsuarioUpdateDTO;
 import java.util.List;
@@ -20,6 +21,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -32,10 +34,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         // 1. Mapeamos de DTO a Entidad
         Usuario nuevoUsuario = usuarioMapper.toEntity(request);
 
-        // 2. Guardamos en BD
+        //encriptamos antes de guardarlo
+        nuevoUsuario.setPassword(passwordEncoder.encode(nuevoUsuario.getPassword()));
+
+        // 3. Guardamos en BD
         Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
 
-        // 3. Mapeamos de Entidad a DTO de respuesta
+        // 4. Mapeamos de Entidad a DTO de respuesta
         return usuarioMapper.toResponseDTO(usuarioGuardado);
     }
 

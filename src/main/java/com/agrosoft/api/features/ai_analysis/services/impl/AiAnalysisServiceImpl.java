@@ -1,14 +1,28 @@
 package com.agrosoft.api.features.ai_analysis.services.impl;
 
 import com.agrosoft.api.features.ai_analysis.client.GroqClient;
+import com.agrosoft.api.features.ai_analysis.dto.AnalisisIaRequestDTO;
+import com.agrosoft.api.features.ai_analysis.dto.AnalisisIaResponseDTO;
+import com.agrosoft.api.features.ai_analysis.dto.RecomendacionDTO;
 import com.agrosoft.api.features.ai_analysis.dto.groq.GroqMessageDTO;
 import com.agrosoft.api.features.ai_analysis.dto.groq.GroqRequestDTO;
 import com.agrosoft.api.features.ai_analysis.dto.groq.GroqResponseDTO;
+import com.agrosoft.api.features.ai_analysis.entities.AnalisisIa;
+import com.agrosoft.api.features.ai_analysis.entities.Recomendacion;
+import com.agrosoft.api.features.ai_analysis.prompts.AiPromptProvider;
+import com.agrosoft.api.features.ai_analysis.repositories.AnalisisIaRepository;
+import com.agrosoft.api.features.ai_analysis.repositories.RecomendacionRepository;
 import com.agrosoft.api.features.ai_analysis.services.AiAnalysisService;
+import com.agrosoft.api.features.crops.entities.CultivoEntity;
+import com.agrosoft.api.features.crops.repositories.CultivoRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +30,11 @@ import java.util.List;
 public class AiAnalysisServiceImpl implements AiAnalysisService {
 
     private final GroqClient groqClient;
+    private final CultivoRepository cultivoRepository;
+    private final AnalisisIaRepository analisisIaRepository;
+    private final RecomendacionRepository recomendacionRepository;
+    private final AiPromptProvider promptProvider;
+    private final ObjectMapper objectMapper;
 
     @Value("${groq.api.key}")
     private String apiKey;
@@ -24,20 +43,91 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
     private String model;
 
     @Override
-    public String probarPrompt(String preguntaDelAgricultor) {
-        GroqMessageDTO systemMessage = new GroqMessageDTO("system",
-                "Eres un ingeniero agrónomo experto. Responde de forma clara, breve y profesional a las dudas sobre cultivos.");
+    @Transactional
+    public AnalisisIaResponseDTO generarAnalisis(AnalisisIaRequestDTO request) {
+        CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
+                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
 
-        GroqMessageDTO userMessage = new GroqMessageDTO("user", preguntaDelAgricultor);
+        String systemPrompt = promptProvider.getSystemPrompt();
+        String userPrompt = promptProvider.buildUserPrompt(cultivo, request);
 
-        GroqRequestDTO request = GroqRequestDTO.builder()
+        GroqResponseDTO groqResponse = llamarGroq(systemPrompt, userPrompt);
+
+        return procesarYGuardarRespuesta(groqResponse, cultivo, request);
+    }
+
+    // ==========================================
+    // MÉTODOS PRIVADOS (SRP)
+    // ==========================================
+
+    private GroqResponseDTO llamarGroq(String systemPrompt, String userPrompt) {
+        GroqRequestDTO groqRequest = GroqRequestDTO.builder()
                 .model(model)
-                .messages(List.of(systemMessage, userMessage))
-                .temperature(0.3)
+                .messages(List.of(
+                        new GroqMessageDTO("system", systemPrompt),
+                        new GroqMessageDTO("user", userPrompt)
+                ))
+                .temperature(0.2)
+                .responseFormat(GroqRequestDTO.ResponseFormat.builder().type("json_object").build())
                 .build();
 
-        GroqResponseDTO response = groqClient.generarRespuesta("Bearer " + apiKey, request);
+        return groqClient.generarRespuesta("Bearer " + apiKey, groqRequest);
+    }
 
-        return response.getChoices().get(0).getMessage().getContent();
+    private AnalisisIaResponseDTO procesarYGuardarRespuesta(GroqResponseDTO groqResponse, CultivoEntity cultivo, AnalisisIaRequestDTO request) {
+        String jsonRespuestaGroq = groqResponse.getChoices().get(0).getMessage().getContent();
+
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonRespuestaGroq);
+
+            // Validación de seguridad (por si Groq falla en la estructura)
+            if (!rootNode.has("resultadoAnalisis")) {
+                throw new RuntimeException("El JSON de la IA no contiene el campo 'resultadoAnalisis'");
+            }
+
+            String resultadoAnalisis = rootNode.get("resultadoAnalisis").asText();
+
+            // Guardar Análisis Principal
+            AnalisisIa analisisGuardado = analisisIaRepository.save(AnalisisIa.builder()
+                    .idCultivo(cultivo.getIdCultivo())
+                    .idIrregularidad(request.getIdIrregularidad())
+                    .tipoAnalisis(request.getTipoAnalisis())
+                    .resultadoAnalisis(resultadoAnalisis)
+                    .build());
+
+            // Procesar Recomendaciones
+            List<RecomendacionDTO> recomendacionesDtoList = new ArrayList<>();
+            if (rootNode.has("recomendaciones") && rootNode.get("recomendaciones").isArray()) {
+                for (JsonNode recNode : rootNode.get("recomendaciones")) {
+                    Recomendacion recomendacion = recomendacionRepository.save(Recomendacion.builder()
+                            .idAnalisis(analisisGuardado.getId())
+                            .idCultivo(cultivo.getIdCultivo())
+                            .titulo(recNode.get("titulo").asText())
+                            .descripcion(recNode.get("descripcion").asText())
+                            .prioridad(recNode.has("prioridad") ? recNode.get("prioridad").asText() : "media")
+                            .aplicada(false)
+                            .build());
+
+                    recomendacionesDtoList.add(RecomendacionDTO.builder()
+                            .idRecomendacion(recomendacion.getId())
+                            .titulo(recomendacion.getTitulo())
+                            .descripcion(recomendacion.getDescripcion())
+                            .prioridad(recomendacion.getPrioridad())
+                            .aplicada(false)
+                            .build());
+                }
+            }
+
+            return AnalisisIaResponseDTO.builder()
+                    .idAnalisis(analisisGuardado.getId())
+                    .idCultivo(cultivo.getIdCultivo())
+                    .tipoAnalisis(analisisGuardado.getTipoAnalisis())
+                    .resultadoAnalisis(analisisGuardado.getResultadoAnalisis())
+                    .recomendaciones(recomendacionesDtoList)
+                    .build();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al procesar la respuesta de la IA: " + e.getMessage(), e);
+        }
     }
 }

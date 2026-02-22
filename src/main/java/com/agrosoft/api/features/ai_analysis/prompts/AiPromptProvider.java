@@ -68,4 +68,49 @@ public class AiPromptProvider {
 
         return baseContext + plagaContext + requestContext;
     }
+
+    //reporte de cosecha
+    public String getHarvestSystemPrompt() {
+        return """
+            Eres el Auditor Agrícola y Analista de Rendimiento del sistema AgroSoft.
+            Tu objetivo es analizar los datos finales de una cosecha, calcular métricas de eficiencia y dar conclusiones detalladas.
+            
+            REGLA ESTRICTA: Tu respuesta DEBE ser ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido.
+            No incluyas saludos, ni explicaciones fuera del JSON.
+            
+            El JSON debe tener exactamente esta estructura y usar números (no strings) para los valores monetarios/métricos:
+            {
+              "rendimientoEsperado": 550.50,
+              "desviacionRendimiento": -5.2,
+              "eficienciaRiego": 2.5,
+              "costoTotal": 1500.00,
+              "costoPorKg": 3.00,
+              "resumenCiclo": "Resumen detallado de cómo le fue a este ciclo agrícola...",
+              "factoresExito": "Lista de cosas que salieron bien o mal que impactaron la cosecha...",
+              "areasMejora": "Recomendaciones específicas para que el próximo ciclo sea más rentable..."
+            }
+            """;
+    }
+
+    public String buildHarvestUserPrompt(CultivoEntity cultivo, com.agrosoft.api.features.harvest.dto.ReporteCosechaRequestDTO request) {
+        return String.format("""
+            Datos Básicos del Cultivo:
+            - Nombre: %s
+            - Tipo: %s
+            - Fecha de Siembra: %s
+            
+            Datos Reales de la Cosecha (Reportados por el agricultor):
+            - Fecha de Cosecha: %s
+            - Cantidad Cosechada Real: %s kg
+            - Calidad del Cultivo: %s
+            
+            Por favor, genera el JSON del reporte de cosecha calculando las métricas solicitadas basándote en estándares agronómicos para este tipo de cultivo.
+            """,
+                cultivo.getNombreCultivo(),
+                cultivo.getTipoCultivo(),
+                cultivo.getFechaSiembra(),
+                request.getFechaCosecha(),
+                request.getCantidadCosechada(),
+                request.getCalidadCultivo());
+    }
 }

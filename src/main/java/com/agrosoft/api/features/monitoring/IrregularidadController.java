@@ -1,7 +1,7 @@
-package com.agrosoft.api.features.monitoring.controllers;
+package com.agrosoft.api.features.monitoring;
 
 import com.agrosoft.api.features.monitoring.dto.IrregularidadRequestDTO;
-import com.agrosoft.api.features.monitoring.entities.Irregularidad;
+import com.agrosoft.api.features.monitoring.dto.IrregularidadResponseDTO;
 import com.agrosoft.api.features.monitoring.services.IrregularidadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,12 +19,12 @@ public class IrregularidadController {
     private final IrregularidadService service;
 
     @PostMapping
-    public ResponseEntity<Irregularidad> reportar(@RequestBody IrregularidadRequestDTO request) {
+    public ResponseEntity<IrregularidadResponseDTO> reportar(@RequestBody IrregularidadRequestDTO request) {
         return new ResponseEntity<>(service.reportarIrregularidad(request), HttpStatus.CREATED);
     }
 
     @GetMapping("/cultivo/{idCultivo}")
-    public ResponseEntity<List<Irregularidad>> obtenerPorCultivo(
+    public ResponseEntity<List<IrregularidadResponseDTO>> obtenerPorCultivo(
             @PathVariable UUID idCultivo,
             @RequestParam(required = false) String estado) {
 
@@ -35,12 +35,12 @@ public class IrregularidadController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Irregularidad> obtenerPorId(@PathVariable UUID id) {
+    public ResponseEntity<IrregularidadResponseDTO> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(service.obtenerPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Irregularidad> actualizar(
+    public ResponseEntity<IrregularidadResponseDTO> actualizar(
             @PathVariable UUID id,
             @RequestBody IrregularidadRequestDTO request) {
         return ResponseEntity.ok(service.actualizarIrregularidad(id, request));

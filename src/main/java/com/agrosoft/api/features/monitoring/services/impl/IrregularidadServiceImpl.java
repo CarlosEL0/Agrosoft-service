@@ -1,6 +1,7 @@
 package com.agrosoft.api.features.monitoring.services.impl;
 
 import com.agrosoft.api.features.monitoring.dto.IrregularidadRequestDTO;
+import com.agrosoft.api.features.monitoring.dto.IrregularidadResponseDTO;
 import com.agrosoft.api.features.monitoring.entities.Irregularidad;
 import com.agrosoft.api.features.monitoring.mappers.IrregularidadMapper;
 import com.agrosoft.api.features.monitoring.repositories.IrregularidadRepository;
@@ -19,41 +20,53 @@ public class IrregularidadServiceImpl implements IrregularidadService {
     private final IrregularidadMapper mapper;
 
     @Override
-    public Irregularidad reportarIrregularidad(IrregularidadRequestDTO request) {
+    public IrregularidadResponseDTO reportarIrregularidad(IrregularidadRequestDTO request) {
         Irregularidad nuevaIrregularidad = mapper.toEntity(request);
         // Si no envían estado, forzamos que sea 'activa'
         if (nuevaIrregularidad.getEstado() == null) {
             nuevaIrregularidad.setEstado("activa");
         }
-        return repository.save(nuevaIrregularidad);
+        Irregularidad guardada = repository.save(nuevaIrregularidad);
+        return mapper.toResponseDTO(guardada);
     }
 
     @Override
-    public List<Irregularidad> obtenerPorCultivo(UUID idCultivo) {
-        return repository.findByIdCultivoOrderByFechaDeteccionDesc(idCultivo);
+    public List<IrregularidadResponseDTO> obtenerPorCultivo(UUID idCultivo) {
+        List<Irregularidad> lista = repository.findByIdCultivoOrderByFechaDeteccionDesc(idCultivo);
+        return mapper.toResponseDTOList(lista);
     }
 
     @Override
-    public List<Irregularidad> obtenerActivasPorCultivo(UUID idCultivo) {
-        return repository.findByIdCultivoAndEstado(idCultivo, "activa");
+    public List<IrregularidadResponseDTO> obtenerActivasPorCultivo(UUID idCultivo) {
+        List<Irregularidad> lista = repository.findByIdCultivoAndEstado(idCultivo, "activa");
+        return mapper.toResponseDTOList(lista);
     }
 
     @Override
-    public Irregularidad obtenerPorId(UUID id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Irregularidad no encontrada"));
+    public IrregularidadResponseDTO obtenerPorId(UUID id) {
+        Irregularidad entidad = getIrregularidadEntity(id);
+        return mapper.toResponseDTO(entidad);
     }
 
     @Override
-    public Irregularidad actualizarIrregularidad(UUID id, IrregularidadRequestDTO request) {
-        Irregularidad existente = obtenerPorId(id);
+    public IrregularidadResponseDTO actualizarIrregularidad(UUID id, IrregularidadRequestDTO request) {
+        Irregularidad existente = getIrregularidadEntity(id);
         mapper.updateEntityFromDto(request, existente);
-        return repository.save(existente);
+        Irregularidad actualizada = repository.save(existente);
+        return mapper.toResponseDTO(actualizada);
     }
 
     @Override
     public void eliminarIrregularidad(UUID id) {
-        obtenerPorId(id);
+        getIrregularidadEntity(id); // Validamos que exista antes de borrar
         repository.deleteById(id);
+    }
+
+    // ==========================================
+    // MÉTODOS PRIVADOS (Uso interno)
+    // ==========================================
+    private Irregularidad getIrregularidadEntity(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Irregularidad no encontrada con ID: " + id));
     }
 }

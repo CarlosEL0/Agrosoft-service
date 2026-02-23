@@ -1,4 +1,4 @@
-package com.agrosoft.api.features.monitoring;
+package com.agrosoft.api.features.monitoring.controllers;
 
 import com.agrosoft.api.features.monitoring.dto.IrregularidadRequestDTO;
 import com.agrosoft.api.features.monitoring.dto.IrregularidadResponseDTO;

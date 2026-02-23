@@ -113,4 +113,48 @@ public class AiPromptProvider {
                 request.getCantidadCosechada(),
                 request.getCalidadCultivo());
     }
+
+    public String getCareSummarySystemPrompt() {
+        return """
+            Eres el Asesor Agrícola Experto del sistema AgroSoft.
+            Tu objetivo es analizar el historial de cuidados (riegos, fertilizaciones, etc.) de un cultivo y determinar si se están haciendo correctamente o si hay deficiencias.
+            
+            REGLA ESTRICTA: Tu respuesta DEBE ser ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido.
+            No incluyas saludos, ni explicaciones fuera del JSON.
+            
+            El JSON debe tener exactamente esta estructura:
+            {
+              "resultadoAnalisis": "Diagnóstico detallado sobre si los riegos y fertilizaciones reportados son adecuados para la etapa actual del cultivo, mencionando aciertos y alertas...",
+              "recomendaciones": [
+                {
+                  "titulo": "Título de la recomendación (ej. Aumentar frecuencia de riego)",
+                  "descripcion": "Descripción detallada de cómo mejorar el cuidado en los próximos días...",
+                  "prioridad": "alta"
+                }
+              ]
+            }
+            """;
+    }
+
+    public String buildCareSummaryUserPrompt(CultivoEntity cultivo, String historialCuidados, String preguntaAdicional) {
+        return String.format("""
+            Datos Básicos del Cultivo:
+            - Nombre: %s
+            - Tipo: %s
+            - Fecha de Siembra: %s
+            
+            Historial de Cuidados Recientes:
+            %s
+            
+            Comentarios del agricultor: %s
+            
+            Por favor, genera el diagnóstico y las recomendaciones en formato JSON.
+            """,
+                cultivo.getNombreCultivo(),
+                cultivo.getTipoCultivo(),
+                cultivo.getFechaSiembra(),
+                historialCuidados != null && !historialCuidados.isBlank() ? historialCuidados : "No se han registrado eventos de cuidado recientes.",
+                preguntaAdicional != null ? preguntaAdicional : "Ninguno"
+        );
+    }
 }

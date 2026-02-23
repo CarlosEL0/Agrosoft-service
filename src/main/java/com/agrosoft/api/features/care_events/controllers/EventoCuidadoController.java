@@ -1,7 +1,7 @@
 package com.agrosoft.api.features.care_events.controllers;
 
 import  com.agrosoft.api.features.care_events.dto.EventoCuidadoRequestDTO;
-import com.agrosoft.api.features.care_events.entities.EventoCuidadoEntity;
+import com.agrosoft.api.features.care_events.entities.EventoCuidado;
 import com.agrosoft.api.features.care_events.service.EventoCuidadoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,30 +19,30 @@ public class EventoCuidadoController {
     private final EventoCuidadoService eventoService;
 
     @PostMapping
-    public ResponseEntity<EventoCuidadoEntity> crearEvento(@RequestBody EventoCuidadoRequestDTO request) {
+    public ResponseEntity<EventoCuidado> crearEvento(@RequestBody EventoCuidadoRequestDTO request) {
         return new ResponseEntity<>(eventoService.crearEvento(request), HttpStatus.CREATED);
     }
 
     @GetMapping("/cultivo/{idCultivo}")
-    public ResponseEntity<List<EventoCuidadoEntity>> obtenerHistorial(@PathVariable UUID idCultivo) {
+    public ResponseEntity<List<EventoCuidado>> obtenerHistorial(@PathVariable UUID idCultivo) {
         return ResponseEntity.ok(eventoService.obtenerHistorialPorCultivo(idCultivo));
     }
 
     // Endpoint extra para filtrar: /api/v1/eventos/cultivo/{id}/tipo?tipo=riego
     @GetMapping("/cultivo/{idCultivo}/tipo")
-    public ResponseEntity<List<EventoCuidadoEntity>> obtenerPorTipo(
+    public ResponseEntity<List<EventoCuidado>> obtenerPorTipo(
             @PathVariable UUID idCultivo,
             @RequestParam String tipo) {
         return ResponseEntity.ok(eventoService.obtenerHistorialPorTipo(idCultivo, tipo));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventoCuidadoEntity> obtenerPorId(@PathVariable UUID id) {
+    public ResponseEntity<EventoCuidado> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(eventoService.obtenerPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventoCuidadoEntity> actualizarEvento(
+    public ResponseEntity<EventoCuidado> actualizarEvento(
             @PathVariable UUID id,
             @RequestBody EventoCuidadoRequestDTO request) {
         return ResponseEntity.ok(eventoService.actualizarEvento(id, request));

@@ -18,7 +18,7 @@ import java.util.UUID;
                 @Index(name = "idx_evento_fecha", columnList = "fecha_evento")
         }
 )
-public class EventoCuidadoEntity {
+public class EventoCuidado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

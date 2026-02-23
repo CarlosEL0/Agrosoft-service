@@ -92,6 +92,7 @@ public class ReporteCosechaServiceImpl implements ReporteCosechaService {
             nuevoReporte.setResumenCiclo(rootNode.get("resumenCiclo").asText());
             nuevoReporte.setFactoresExito(rootNode.get("factoresExito").asText());
             nuevoReporte.setAreasMejora(rootNode.get("areasMejora").asText());
+            nuevoReporte.setFechaGeneracion(java.time.LocalDateTime.now());
 
             // Guardamos el mega-reporte
             ReporteCosecha reporteGuardado = reporteCosechaRepository.save(nuevoReporte);

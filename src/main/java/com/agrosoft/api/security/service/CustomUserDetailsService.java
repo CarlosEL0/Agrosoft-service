@@ -2,12 +2,15 @@ package com.agrosoft.api.security.service;
 
 import com.agrosoft.api.features.user.entities.Usuario;
 import com.agrosoft.api.features.user.repositories.UsuarioRepository;
+import com.agrosoft.api.security.model.AgroSoftSecurityUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -20,11 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
 
-        // Convertimos tu Entidad 'Usuario' al objeto 'UserDetails' que entiende Spring Security
-        return User.builder()
-                .username(usuario.getCorreoElectronico())
-                .password(usuario.getPassword())
-                .roles("USER")
-                .build();
+        return new AgroSoftSecurityUser(
+                usuario.getId(),
+                usuario.getCorreoElectronico(),
+                usuario.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+        );
     }
 }

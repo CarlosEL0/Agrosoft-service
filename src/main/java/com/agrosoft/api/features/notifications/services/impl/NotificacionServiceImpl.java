@@ -35,6 +35,7 @@ public class NotificacionServiceImpl implements NotificacionService {
     private final DescripcionNotificacionRepository descripcionRepository;
     private final NotificacionMapper notificacionMapper;
 
+
     @Override
     @Transactional
     public void generarNotificacionesFinEtapa() {

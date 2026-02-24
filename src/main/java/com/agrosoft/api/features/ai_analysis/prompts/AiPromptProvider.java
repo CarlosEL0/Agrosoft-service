@@ -157,4 +157,50 @@ public class AiPromptProvider {
                 preguntaAdicional != null ? preguntaAdicional : "Ninguno"
         );
     }
+
+    public String getGrowthInterpretationSystemPrompt() {
+        return """
+            Eres el Especialista en Fisiología Vegetal y Biometría del sistema AgroSoft.
+            Tu objetivo es analizar los registros de crecimiento de una planta (altura, grosor de tallo, diámetro) y compararlos con los parámetros esperados de ese cultivo para detectar enanismo, estiramiento excesivo (etiolación) o crecimiento óptimo.
+            
+            REGLA ESTRICTA: Tu respuesta DEBE ser ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido.
+            No incluyas saludos, ni explicaciones fuera del JSON.
+            
+            El JSON debe tener exactamente esta estructura:
+            {
+              "resultadoAnalisis": "Interpretación detallada de la curva de crecimiento. Menciona si la altura y el tallo son proporcionales y si va acorde a lo esperado...",
+              "recomendaciones": [
+                {
+                  "titulo": "Acción recomendada (ej. Aumentar horas de luz)",
+                  "descripcion": "Descripción detallada del porqué y cómo hacerlo...",
+                  "prioridad": "media"
+                }
+              ]
+            }
+            """;
+    }
+
+    public String buildGrowthInterpretationUserPrompt(CultivoEntity cultivo, String historialCrecimiento, String preguntaAdicional) {
+        return String.format("""
+            Parámetros Teóricos del Cultivo:
+            - Nombre: %s
+            - Tipo: %s
+            - Fecha de Siembra: %s
+            - Altura Máxima Esperada al Cosechar: %s cm
+            
+            Registros Reales de Crecimiento (Del más reciente al más antiguo):
+            %s
+            
+            Comentarios del agricultor: %s
+            
+            Por favor, genera la interpretación de crecimiento y las recomendaciones en formato JSON.
+            """,
+                cultivo.getNombreCultivo(),
+                cultivo.getTipoCultivo(),
+                cultivo.getFechaSiembra(),
+                cultivo.getAlturaEsperada() != null ? cultivo.getAlturaEsperada() : "No especificada",
+                historialCrecimiento != null && !historialCrecimiento.isBlank() ? historialCrecimiento : "No hay registros de crecimiento disponibles.",
+                preguntaAdicional != null ? preguntaAdicional : "Ninguno"
+        );
+    }
 }

@@ -18,6 +18,9 @@ import com.agrosoft.api.features.crops.entities.CultivoEntity;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.monitoring.entities.RegistroCrecimiento;
 import com.agrosoft.api.features.monitoring.repositories.RegistroCrecimientoRepository;
+import com.agrosoft.api.shared.exceptions.BusinessRuleException;
+import com.agrosoft.api.shared.exceptions.IntegrationException;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +56,7 @@ public class AiGrowthInterpretationServiceImpl implements AiGrowthInterpretation
     @Transactional
     public AnalisisIaResponseDTO interpretarCrecimiento(InterpretacionCrecimientoRequestDTO request) {
         CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
-                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
         // 2. Obtener el historial de crecimiento (ya viene ordenado de más reciente a más antiguo por nuestro Repository)
         List<RegistroCrecimiento> registros = registroCrecimientoRepository.findByIdCultivoOrderByFechaRegistroDesc(request.getIdCultivo());
@@ -133,7 +136,7 @@ public class AiGrowthInterpretationServiceImpl implements AiGrowthInterpretation
             return aiAnalysisMapper.toResponseDTO(analisisGuardado, recomendacionesDTO);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error procesando IA de crecimiento: " + e.getMessage(), e);
+            throw new IntegrationException("Error procesando IA de crecimiento: " + e.getMessage(), e);
         }
     }
 }

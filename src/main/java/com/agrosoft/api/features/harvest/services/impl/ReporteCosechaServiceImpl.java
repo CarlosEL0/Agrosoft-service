@@ -15,6 +15,9 @@ import com.agrosoft.api.features.harvest.entities.ReporteCosecha;
 import com.agrosoft.api.features.harvest.mappers.ReporteCosechaMapper;
 import com.agrosoft.api.features.harvest.repositories.ReporteCosechaRepository;
 import com.agrosoft.api.features.harvest.services.ReporteCosechaService;
+import com.agrosoft.api.shared.exceptions.BusinessRuleException;
+import com.agrosoft.api.shared.exceptions.IntegrationException;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -51,12 +54,12 @@ public class ReporteCosechaServiceImpl implements ReporteCosechaService {
 
         // 1. Validar que no exista un reporte duplicado para este ciclo
         if (reporteCosechaRepository.existsByIdCiclo(request.getIdCiclo())) {
-            throw new RuntimeException("Ya existe un reporte de cosecha para este ciclo agrícola.");
+            throw new BusinessRuleException("Ya existe un reporte de cosecha para este ciclo agrícola.");
         }
 
         // 2. Obtener el contexto del cultivo
         CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
-                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
 
 
@@ -100,7 +103,7 @@ public class ReporteCosechaServiceImpl implements ReporteCosechaService {
             return mapper.toResponseDTO(reporteGuardado);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error procesando el reporte de cosecha de IA: " + e.getMessage(), e);
+            throw new IntegrationException("Error procesando el reporte de cosecha de IA: " + e.getMessage(), e);
         }
     }
 

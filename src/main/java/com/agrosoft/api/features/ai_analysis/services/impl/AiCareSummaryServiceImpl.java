@@ -18,6 +18,8 @@ import com.agrosoft.api.features.care_events.entities.EventoCuidado;
 import com.agrosoft.api.features.care_events.repositories.EventoCuidadoRepository;
 import com.agrosoft.api.features.crops.entities.CultivoEntity;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
+import com.agrosoft.api.shared.exceptions.IntegrationException;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +56,7 @@ public class AiCareSummaryServiceImpl implements AiCareSummaryService {
     @Transactional
     public AnalisisIaResponseDTO generarResumenCuidados(ResumenCuidadosRequestDTO request) {
         CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
-                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
         List<EventoCuidado> eventos = eventoCuidadoRepository.findAll();
 
@@ -135,7 +137,7 @@ public class AiCareSummaryServiceImpl implements AiCareSummaryService {
             return aiAnalysisMapper.toResponseDTO(analisisGuardado, recomendacionesDTO);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error procesando IA: " + e.getMessage(), e);
+            throw new IntegrationException("Error procesando IA: " + e.getMessage(), e);
         }
     }
 }

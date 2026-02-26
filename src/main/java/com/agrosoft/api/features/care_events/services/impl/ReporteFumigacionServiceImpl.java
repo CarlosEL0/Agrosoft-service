@@ -5,6 +5,7 @@ import com.agrosoft.api.features.care_events.entities.ReporteFumigacion;
 import com.agrosoft.api.features.care_events.mappers.ReporteFumigacionMapper;
 import com.agrosoft.api.features.care_events.repositories.ReporteFumigacionRepository;
 import com.agrosoft.api.features.care_events.service.ReporteFumigacionService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,13 @@ public class ReporteFumigacionServiceImpl implements ReporteFumigacionService {
     @Override
     public ReporteFumigacion obtenerPorEvento(UUID idEvento) {
         return fumigacionRepository.findByIdEvento(idEvento)
-                .orElseThrow(() -> new RuntimeException("No hay reporte de fumigación para el evento: " + idEvento));
+                .orElseThrow(() -> new ResourceNotFoundException("No hay reporte de fumigación para el evento: " + idEvento));
     }
 
     @Override
     public ReporteFumigacion actualizarReporte(UUID idFumigacion, ReporteFumigacionRequestDTO request) {
         ReporteFumigacion reporte = fumigacionRepository.findById(idFumigacion)
-                .orElseThrow(() -> new RuntimeException("Reporte no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado"));
         fumigacionMapper.updateEntityFromDto(request, reporte);
         return fumigacionRepository.save(reporte);
     }

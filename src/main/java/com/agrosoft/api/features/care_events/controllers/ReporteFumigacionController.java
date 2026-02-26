@@ -3,6 +3,7 @@ package com.agrosoft.api.features.care_events.controllers;
 import com.agrosoft.api.features.care_events.dto.ReporteFumigacionRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteFumigacion;
 import com.agrosoft.api.features.care_events.service.ReporteFumigacionService;
+import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +19,19 @@ public class ReporteFumigacionController {
     private final ReporteFumigacionService fumigacionService;
 
     @PostMapping
-    public ResponseEntity<ReporteFumigacion> crearReporte(@RequestBody ReporteFumigacionRequestDTO request) {
-        return new ResponseEntity<>(fumigacionService.crearReporte(request), HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<ReporteFumigacion>> crearReporte(@RequestBody ReporteFumigacionRequestDTO request) {
+        return new ResponseEntity<>(ApiResponse.success("Reporte de fumigación creado", fumigacionService.crearReporte(request)), HttpStatus.CREATED);
     }
 
     @GetMapping("/evento/{idEvento}")
-    public ResponseEntity<ReporteFumigacion> obtenerPorEvento(@PathVariable UUID idEvento) {
-        return ResponseEntity.ok(fumigacionService.obtenerPorEvento(idEvento));
+    public ResponseEntity<ApiResponse<ReporteFumigacion>> obtenerPorEvento(@PathVariable UUID idEvento) {
+        return ResponseEntity.ok(ApiResponse.success("Reporte recuperado", fumigacionService.obtenerPorEvento(idEvento)));
     }
 
     @PutMapping("/{idFumigacion}")
-    public ResponseEntity<ReporteFumigacion> actualizarReporte(
+    public ResponseEntity<ApiResponse<ReporteFumigacion>> actualizarReporte(
             @PathVariable UUID idFumigacion,
             @RequestBody ReporteFumigacionRequestDTO request) {
-        return ResponseEntity.ok(fumigacionService.actualizarReporte(idFumigacion, request));
+        return ResponseEntity.ok(ApiResponse.success("Reporte actualizado", fumigacionService.actualizarReporte(idFumigacion, request)));
     }
 }

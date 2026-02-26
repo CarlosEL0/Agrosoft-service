@@ -1,8 +1,9 @@
 package com.agrosoft.api.features.care_events.controllers;
 
-import  com.agrosoft.api.features.care_events.dto.EventoCuidadoRequestDTO;
+import com.agrosoft.api.features.care_events.dto.EventoCuidadoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.EventoCuidado;
 import com.agrosoft.api.features.care_events.service.EventoCuidadoService;
+import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,38 +20,37 @@ public class EventoCuidadoController {
     private final EventoCuidadoService eventoService;
 
     @PostMapping
-    public ResponseEntity<EventoCuidado> crearEvento(@RequestBody EventoCuidadoRequestDTO request) {
-        return new ResponseEntity<>(eventoService.crearEvento(request), HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<EventoCuidado>> crearEvento(@RequestBody EventoCuidadoRequestDTO request) {
+        return new ResponseEntity<>(ApiResponse.success("Evento registrado", eventoService.crearEvento(request)), HttpStatus.CREATED);
     }
 
     @GetMapping("/cultivo/{idCultivo}")
-    public ResponseEntity<List<EventoCuidado>> obtenerHistorial(@PathVariable UUID idCultivo) {
-        return ResponseEntity.ok(eventoService.obtenerHistorialPorCultivo(idCultivo));
+    public ResponseEntity<ApiResponse<List<EventoCuidado>>> obtenerHistorial(@PathVariable UUID idCultivo) {
+        return ResponseEntity.ok(ApiResponse.success("Historial recuperado", eventoService.obtenerHistorialPorCultivo(idCultivo)));
     }
 
-    // Endpoint extra para filtrar: /api/v1/eventos/cultivo/{id}/tipo?tipo=riego
     @GetMapping("/cultivo/{idCultivo}/tipo")
-    public ResponseEntity<List<EventoCuidado>> obtenerPorTipo(
+    public ResponseEntity<ApiResponse<List<EventoCuidado>>> obtenerPorTipo(
             @PathVariable UUID idCultivo,
             @RequestParam String tipo) {
-        return ResponseEntity.ok(eventoService.obtenerHistorialPorTipo(idCultivo, tipo));
+        return ResponseEntity.ok(ApiResponse.success("Eventos recuperados", eventoService.obtenerHistorialPorTipo(idCultivo, tipo)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventoCuidado> obtenerPorId(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventoService.obtenerPorId(id));
+    public ResponseEntity<ApiResponse<EventoCuidado>> obtenerPorId(@PathVariable UUID id) {
+        return ResponseEntity.ok(ApiResponse.success("Evento recuperado", eventoService.obtenerPorId(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventoCuidado> actualizarEvento(
+    public ResponseEntity<ApiResponse<EventoCuidado>> actualizarEvento(
             @PathVariable UUID id,
             @RequestBody EventoCuidadoRequestDTO request) {
-        return ResponseEntity.ok(eventoService.actualizarEvento(id, request));
+        return ResponseEntity.ok(ApiResponse.success("Evento actualizado", eventoService.actualizarEvento(id, request)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarEvento(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> eliminarEvento(@PathVariable UUID id) {
         eventoService.eliminarEvento(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("Evento eliminado correctamente"));
     }
 }

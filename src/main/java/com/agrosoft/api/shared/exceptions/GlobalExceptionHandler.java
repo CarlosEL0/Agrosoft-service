@@ -44,4 +44,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleGlobalException(Exception ex) {
         return new ResponseEntity<>(ApiResponse.error("Ocurrió un error interno en el servidor: " + ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // Manejo para fallos de Integración (Groq, Cloudinary, etc.) - Error 500
+    @ExceptionHandler(IntegrationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIntegrationException(IntegrationException ex) {
+        // Al frontend solo le decimos que hubo un problema con un servicio externo
+        return new ResponseEntity<>(ApiResponse.error("Error de integración con servicios externos: " + ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

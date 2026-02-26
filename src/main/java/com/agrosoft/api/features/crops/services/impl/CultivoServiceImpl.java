@@ -5,6 +5,7 @@ import com.agrosoft.api.features.crops.entities.CultivoEntity;
 import com.agrosoft.api.features.crops.mappers.CultivoMapper;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.crops.service.CultivoService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class CultivoServiceImpl implements CultivoService {
     @Override
     public CultivoEntity obtenerPorId(UUID id) {
         return cultivoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado con ID: " + id));
     }
 
     @Override

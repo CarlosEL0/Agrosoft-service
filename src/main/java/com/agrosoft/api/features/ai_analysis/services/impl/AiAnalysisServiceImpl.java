@@ -18,6 +18,8 @@ import com.agrosoft.api.features.crops.entities.CultivoEntity;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.monitoring.entities.Irregularidad;
 import com.agrosoft.api.features.monitoring.repositories.IrregularidadRepository;
+import com.agrosoft.api.shared.exceptions.IntegrationException;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -53,13 +55,13 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
 
         // 1. OBTENER EL CULTIVO
         CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
-                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
         // 2. OBTENER LA PLAGA
         Irregularidad plaga = null;
         if (request.getIdIrregularidad() != null) {
             plaga = irregularidadRepository.findById(request.getIdIrregularidad())
-                    .orElseThrow(() -> new RuntimeException("Irregularidad no encontrada"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Irregularidad no encontrada"));
         }
 
         // 3. CONSTRUIR PROMPT E INYECTAR DATOS
@@ -93,7 +95,7 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
         try {
             JsonNode rootNode = objectMapper.readTree(jsonRespuestaGroq);
             if (!rootNode.has("resultadoAnalisis")) {
-                throw new RuntimeException("El JSON de la IA es inválido.");
+                throw new IntegrationException("El JSON de la IA es inválido.");
             }
 
             // A. Guardar Análisis
@@ -124,7 +126,7 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
             return aiAnalysisMapper.toResponseDTO(analisisGuardado, recomendacionesDTO);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error al procesar la IA: " + e.getMessage(), e);
+            throw new IntegrationException("Error al procesar la IA: " + e.getMessage(), e);
         }
     }
 }

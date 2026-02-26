@@ -5,6 +5,7 @@ import com.agrosoft.api.features.care_events.entities.ReporteFertilizacionEntity
 import com.agrosoft.api.features.care_events.mappers.ReporteFertilizacionMapper;
 import com.agrosoft.api.features.care_events.repositories.ReporteFertilizacionRepository;
 import com.agrosoft.api.features.care_events.service.ReporteFertilizacionService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,13 @@ public class ReporteFertilizacionServiceImpl implements ReporteFertilizacionServ
     @Override
     public ReporteFertilizacionEntity obtenerPorEvento(UUID idEvento) {
         return fertilizacionRepository.findByIdEvento(idEvento)
-                .orElseThrow(() -> new RuntimeException("No hay reporte de fertilización para el evento: " + idEvento));
+                .orElseThrow(() -> new ResourceNotFoundException("No hay reporte de fertilización para el evento: " + idEvento));
     }
 
     @Override
     public ReporteFertilizacionEntity actualizarReporte(UUID idFertilizacion, ReporteFertilizacionRequestDTO request) {
         ReporteFertilizacionEntity reporte = fertilizacionRepository.findById(idFertilizacion)
-                .orElseThrow(() -> new RuntimeException("Reporte no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado"));
         fertilizacionMapper.updateEntityFromDto(request, reporte);
         return fertilizacionRepository.save(reporte);
     }

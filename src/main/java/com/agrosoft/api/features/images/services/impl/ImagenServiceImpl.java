@@ -4,7 +4,7 @@ import com.agrosoft.api.features.images.dto.ImagenResponseDTO;
 import com.agrosoft.api.features.images.entities.Imagen;
 import com.agrosoft.api.features.images.mappers.ImagenMapper;
 import com.agrosoft.api.features.images.repositories.ImagenRepository;
-import com.agrosoft.api.features.images.service.ImagenService;
+import com.agrosoft.api.features.images.services.ImagenService;
 import com.agrosoft.api.shared.services.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

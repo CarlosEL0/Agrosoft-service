@@ -18,7 +18,7 @@ import java.util.UUID;
                 @Index(name = "idx_face_numero_ciclo", columnList = "numero_ciclo")
         }
 )
-public class FaseAgricolaEntity {
+public class FaseAgricola {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -1,7 +1,7 @@
 package com.agrosoft.api.features.images.controllers;
 
 import com.agrosoft.api.features.images.dto.ImagenResponseDTO;
-import com.agrosoft.api.features.images.service.ImagenService;
+import com.agrosoft.api.features.images.services.ImagenService;
 import com.agrosoft.api.shared.exceptions.BusinessRuleException;
 import com.agrosoft.api.shared.exceptions.IntegrationException;
 import com.agrosoft.api.shared.response.ApiResponse;

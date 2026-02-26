@@ -1,4 +1,4 @@
-package com.agrosoft.api.features.user;
+package com.agrosoft.api.features.user.controllers;
 
 import com.agrosoft.api.features.user.dto.UsuarioRequestDTO;
 import com.agrosoft.api.features.user.dto.UsuarioResponseDTO;

@@ -1,7 +1,7 @@
 package com.agrosoft.api.features.notifications.controllers;
 
 import com.agrosoft.api.features.notifications.dto.NotificacionResponseDTO;
-import com.agrosoft.api.features.notifications.service.NotificacionService;
+import com.agrosoft.api.features.notifications.services.NotificacionService;
 import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

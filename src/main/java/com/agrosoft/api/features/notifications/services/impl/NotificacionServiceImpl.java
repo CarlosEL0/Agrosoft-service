@@ -1,8 +1,8 @@
 package com.agrosoft.api.features.notifications.services.impl;
 
-import com.agrosoft.api.features.crops.entities.CultivoEntity;
-import com.agrosoft.api.features.crops.entities.EtapaCrecimientoEntity;
-import com.agrosoft.api.features.crops.entities.FaseAgricolaEntity;
+import com.agrosoft.api.features.crops.entities.Cultivo;
+import com.agrosoft.api.features.crops.entities.EtapaCrecimiento;
+import com.agrosoft.api.features.crops.entities.FaseAgricola;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.crops.repositories.EtapaCrecimientoRepository;
 import com.agrosoft.api.features.crops.repositories.FaseAgricolaRepository;
@@ -12,7 +12,7 @@ import com.agrosoft.api.features.notifications.entities.Notificacion;
 import com.agrosoft.api.features.notifications.mappers.NotificacionMapper;
 import com.agrosoft.api.features.notifications.repositories.DescripcionNotificacionRepository;
 import com.agrosoft.api.features.notifications.repositories.NotificacionRepository;
-import com.agrosoft.api.features.notifications.service.NotificacionService;
+import com.agrosoft.api.features.notifications.services.NotificacionService;
 import com.agrosoft.api.shared.exceptions.IntegrationException;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class NotificacionServiceImpl implements NotificacionService {
         LocalDate hoy = LocalDate.now();
 
         // 1. Buscar etapas que vencen hoy
-        List<EtapaCrecimientoEntity> etapasVencidas = etapaRepository.findByFechaFin(hoy);
+        List<EtapaCrecimiento> etapasVencidas = etapaRepository.findByFechaFin(hoy);
 
         if (etapasVencidas.isEmpty()) return;
 
@@ -53,7 +53,7 @@ public class NotificacionServiceImpl implements NotificacionService {
                 .findByTipoNotificacion("FIN_ETAPA")
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Plantilla 'FIN_ETAPA' no encontrada en DB"));
 
-        for (EtapaCrecimientoEntity etapa : etapasVencidas) {
+        for (EtapaCrecimiento etapa : etapasVencidas) {
 
             // 3. Evitar duplicados
             if (notificacionRepository.existsByIdRecursoAndTipoRecurso(etapa.getIdEtapa(), "ETAPA")) {
@@ -97,9 +97,9 @@ public class NotificacionServiceImpl implements NotificacionService {
     }
 
     private UUID obtenerIdUsuario(UUID idCiclo) {
-        FaseAgricolaEntity fase = faseRepository.findById(idCiclo)
+        FaseAgricola fase = faseRepository.findById(idCiclo)
                 .orElseThrow(() -> new ResourceNotFoundException("Fase no encontrada"));
-        CultivoEntity cultivo = cultivoRepository.findById(fase.getIdCultivo())
+        Cultivo cultivo = cultivoRepository.findById(fase.getIdCultivo())
                 .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
         return cultivo.getIdUsuario();
     }

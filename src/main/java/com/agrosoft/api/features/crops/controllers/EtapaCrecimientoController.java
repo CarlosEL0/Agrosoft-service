@@ -1,8 +1,8 @@
 package com.agrosoft.api.features.crops.controllers;
 
 import com.agrosoft.api.features.crops.dto.EtapaCrecimientoRequestDTO;
-import com.agrosoft.api.features.crops.entities.EtapaCrecimientoEntity;
-import com.agrosoft.api.features.crops.service.EtapaCrecimientoService;
+import com.agrosoft.api.features.crops.entities.EtapaCrecimiento;
+import com.agrosoft.api.features.crops.services.EtapaCrecimientoService;
 import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,22 +20,22 @@ public class EtapaCrecimientoController {
     private final EtapaCrecimientoService etapaService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<EtapaCrecimientoEntity>> crearEtapa(@RequestBody EtapaCrecimientoRequestDTO request) {
+    public ResponseEntity<ApiResponse<EtapaCrecimiento>> crearEtapa(@RequestBody EtapaCrecimientoRequestDTO request) {
         return new ResponseEntity<>(ApiResponse.success("Etapa creada exitosamente", etapaService.crearEtapa(request)), HttpStatus.CREATED);
     }
 
     @GetMapping("/ciclo/{idCiclo}")
-    public ResponseEntity<ApiResponse<List<EtapaCrecimientoEntity>>> obtenerPorCiclo(@PathVariable UUID idCiclo) {
+    public ResponseEntity<ApiResponse<List<EtapaCrecimiento>>> obtenerPorCiclo(@PathVariable UUID idCiclo) {
         return ResponseEntity.ok(ApiResponse.success("Etapas recuperadas", etapaService.obtenerPorCiclo(idCiclo)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<EtapaCrecimientoEntity>> obtenerPorId(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<EtapaCrecimiento>> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(ApiResponse.success("Etapa recuperada", etapaService.obtenerPorId(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<EtapaCrecimientoEntity>> actualizarEtapa(
+    public ResponseEntity<ApiResponse<EtapaCrecimiento>> actualizarEtapa(
             @PathVariable UUID id,
             @RequestBody EtapaCrecimientoRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Etapa actualizada", etapaService.actualizarEtapa(id, request)));

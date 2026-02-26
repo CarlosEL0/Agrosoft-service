@@ -4,7 +4,7 @@ import com.agrosoft.api.features.care_events.dto.EventoCuidadoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.EventoCuidado;
 import com.agrosoft.api.features.care_events.mappers.EventoCuidadoMapper;
 import com.agrosoft.api.features.care_events.repositories.EventoCuidadoRepository;
-import com.agrosoft.api.features.care_events.service.EventoCuidadoService;
+import com.agrosoft.api.features.care_events.services.EventoCuidadoService;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

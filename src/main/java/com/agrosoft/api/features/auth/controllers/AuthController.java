@@ -1,4 +1,4 @@
-package com.agrosoft.api.features.auth;
+package com.agrosoft.api.features.auth.controllers;
 
 import com.agrosoft.api.features.auth.dto.AuthRequestDTO;
 import com.agrosoft.api.features.auth.dto.AuthResponseDTO;

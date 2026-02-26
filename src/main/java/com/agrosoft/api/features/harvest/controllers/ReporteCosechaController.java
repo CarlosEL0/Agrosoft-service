@@ -1,4 +1,4 @@
-package com.agrosoft.api.features.harvest;
+package com.agrosoft.api.features.harvest.controllers;
 
 import com.agrosoft.api.features.harvest.dto.ReporteCosechaRequestDTO;
 import com.agrosoft.api.features.harvest.dto.ReporteCosechaResponseDTO;

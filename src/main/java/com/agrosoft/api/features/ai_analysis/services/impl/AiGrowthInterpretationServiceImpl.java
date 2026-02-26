@@ -14,11 +14,10 @@ import com.agrosoft.api.features.ai_analysis.prompts.AiPromptProvider;
 import com.agrosoft.api.features.ai_analysis.repositories.AnalisisIaRepository;
 import com.agrosoft.api.features.ai_analysis.repositories.RecomendacionRepository;
 import com.agrosoft.api.features.ai_analysis.services.AiGrowthInterpretationService;
-import com.agrosoft.api.features.crops.entities.CultivoEntity;
+import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.monitoring.entities.RegistroCrecimiento;
 import com.agrosoft.api.features.monitoring.repositories.RegistroCrecimientoRepository;
-import com.agrosoft.api.shared.exceptions.BusinessRuleException;
 import com.agrosoft.api.shared.exceptions.IntegrationException;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -55,7 +54,7 @@ public class AiGrowthInterpretationServiceImpl implements AiGrowthInterpretation
     @Override
     @Transactional
     public AnalisisIaResponseDTO interpretarCrecimiento(InterpretacionCrecimientoRequestDTO request) {
-        CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
+        Cultivo cultivo = cultivoRepository.findById(request.getIdCultivo())
                 .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
         // 2. Obtener el historial de crecimiento (ya viene ordenado de más reciente a más antiguo por nuestro Repository)

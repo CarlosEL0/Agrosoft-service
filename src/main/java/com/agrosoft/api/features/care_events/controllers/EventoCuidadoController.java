@@ -2,7 +2,7 @@ package com.agrosoft.api.features.care_events.controllers;
 
 import com.agrosoft.api.features.care_events.dto.EventoCuidadoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.EventoCuidado;
-import com.agrosoft.api.features.care_events.service.EventoCuidadoService;
+import com.agrosoft.api.features.care_events.services.EventoCuidadoService;
 import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

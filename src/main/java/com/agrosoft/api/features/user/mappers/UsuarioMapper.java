@@ -13,12 +13,16 @@ import org.mapstruct.MappingTarget;
 public interface UsuarioMapper {
 
     // Convierte lo que llega de la web a una entidad para la base de datos
+    @Mapping(target = "id", ignore = true)
     Usuario toEntity(UsuarioRequestDTO dto);
 
     // Convierte la entidad de la base de datos a una respuesta segura para la web
     UsuarioResponseDTO toResponseDTO(Usuario entity);
 
     //Actualiza la entidad existente con los datos del DTO
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "correoElectronico", ignore = true)
+    @Mapping(target = "password", ignore = true)
     void updateEntityFromDTO(UsuarioUpdateDTO dto, @MappingTarget Usuario entity);
 
 }

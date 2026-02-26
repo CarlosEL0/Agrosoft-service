@@ -1,10 +1,10 @@
 package com.agrosoft.api.features.crops.services.impl;
 
 import com.agrosoft.api.features.crops.dto.EtapaCrecimientoRequestDTO;
-import com.agrosoft.api.features.crops.entities.EtapaCrecimientoEntity;
+import com.agrosoft.api.features.crops.entities.EtapaCrecimiento;
 import com.agrosoft.api.features.crops.mappers.EtapaCrecimientoMapper;
 import com.agrosoft.api.features.crops.repositories.EtapaCrecimientoRepository;
-import com.agrosoft.api.features.crops.service.EtapaCrecimientoService;
+import com.agrosoft.api.features.crops.services.EtapaCrecimientoService;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,25 +20,25 @@ public class EtapaCrecimientoServiceImpl implements EtapaCrecimientoService {
     private final EtapaCrecimientoMapper etapaMapper;
 
     @Override
-    public EtapaCrecimientoEntity crearEtapa(EtapaCrecimientoRequestDTO request) {
-        EtapaCrecimientoEntity nuevaEtapa = etapaMapper.toEntity(request);
+    public EtapaCrecimiento crearEtapa(EtapaCrecimientoRequestDTO request) {
+        EtapaCrecimiento nuevaEtapa = etapaMapper.toEntity(request);
         return etapaRepository.save(nuevaEtapa);
     }
 
     @Override
-    public List<EtapaCrecimientoEntity> obtenerPorCiclo(UUID idCiclo) {
+    public List<EtapaCrecimiento> obtenerPorCiclo(UUID idCiclo) {
         return etapaRepository.findByIdCicloOrderByOrdenEtapaAsc(idCiclo);
     }
 
     @Override
-    public EtapaCrecimientoEntity obtenerPorId(UUID id) {
+    public EtapaCrecimiento obtenerPorId(UUID id) {
         return etapaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Etapa no encontrada con ID: " + id));
     }
 
     @Override
-    public EtapaCrecimientoEntity actualizarEtapa(UUID id, EtapaCrecimientoRequestDTO request) {
-        EtapaCrecimientoEntity etapaExistente = obtenerPorId(id);
+    public EtapaCrecimiento actualizarEtapa(UUID id, EtapaCrecimientoRequestDTO request) {
+        EtapaCrecimiento etapaExistente = obtenerPorId(id);
         etapaMapper.updateEntityFromDto(request, etapaExistente);
         return etapaRepository.save(etapaExistente);
     }

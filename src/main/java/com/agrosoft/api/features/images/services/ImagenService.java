@@ -1,4 +1,4 @@
-package com.agrosoft.api.features.images.service;
+package com.agrosoft.api.features.images.services;
 
 import com.agrosoft.api.features.images.dto.ImagenResponseDTO;
 import org.springframework.web.multipart.MultipartFile;

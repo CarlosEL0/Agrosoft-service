@@ -14,7 +14,7 @@ import com.agrosoft.api.features.ai_analysis.prompts.AiPromptProvider;
 import com.agrosoft.api.features.ai_analysis.repositories.AnalisisIaRepository;
 import com.agrosoft.api.features.ai_analysis.repositories.RecomendacionRepository;
 import com.agrosoft.api.features.ai_analysis.services.AiAnalysisService;
-import com.agrosoft.api.features.crops.entities.CultivoEntity;
+import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.monitoring.entities.Irregularidad;
 import com.agrosoft.api.features.monitoring.repositories.IrregularidadRepository;
@@ -54,7 +54,7 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
     public AnalisisIaResponseDTO generarAnalisis(AnalisisIaRequestDTO request) {
 
         // 1. OBTENER EL CULTIVO
-        CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
+        Cultivo cultivo = cultivoRepository.findById(request.getIdCultivo())
                 .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
         // 2. OBTENER LA PLAGA
@@ -89,7 +89,7 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
         return groqClient.generarRespuesta("Bearer " + apiKey, groqRequest);
     }
 
-    private AnalisisIaResponseDTO procesarYGuardarRespuesta(GroqResponseDTO groqResponse, CultivoEntity cultivo, AnalisisIaRequestDTO request) {
+    private AnalisisIaResponseDTO procesarYGuardarRespuesta(GroqResponseDTO groqResponse, Cultivo cultivo, AnalisisIaRequestDTO request) {
         String jsonRespuestaGroq = groqResponse.getChoices().get(0).getMessage().getContent();
 
         try {

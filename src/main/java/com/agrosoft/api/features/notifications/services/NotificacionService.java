@@ -1,4 +1,4 @@
-package com.agrosoft.api.features.notifications.service;
+package com.agrosoft.api.features.notifications.services;
 
 import com.agrosoft.api.features.notifications.dto.NotificacionResponseDTO;
 import java.util.List;

@@ -5,6 +5,7 @@ import com.agrosoft.api.features.care_events.entities.ReportePoda;
 import com.agrosoft.api.features.care_events.mappers.ReportePodaMapper;
 import com.agrosoft.api.features.care_events.repositories.ReportePodaRepository;
 import com.agrosoft.api.features.care_events.service.ReportePodaService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,13 @@ public class ReportePodaServiceImpl implements ReportePodaService {
     @Override
     public ReportePoda obtenerPorEvento(UUID idEvento) {
         return podaRepository.findByIdEvento(idEvento)
-                .orElseThrow(() -> new RuntimeException("No hay reporte de poda para el evento: " + idEvento));
+                .orElseThrow(() -> new ResourceNotFoundException("No hay reporte de poda para el evento: " + idEvento));
     }
 
     @Override
     public ReportePoda actualizarReporte(UUID idPoda, ReportePodaRequestDTO request) {
         ReportePoda reporte = podaRepository.findById(idPoda)
-                .orElseThrow(() -> new RuntimeException("Reporte no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado"));
         podaMapper.updateEntityFromDto(request, reporte);
         return podaRepository.save(reporte);
     }

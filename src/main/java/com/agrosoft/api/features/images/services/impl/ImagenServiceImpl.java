@@ -29,7 +29,7 @@ public class ImagenServiceImpl implements ImagenService {
             String tipoReferencia
     ) throws IOException {
 
-        // 1. Definir carpeta en Cloudinary (ej: agrosoft/evidencias/riego)
+        // 1. Definir carpeta en Cloudinary
         String carpeta = "evidencias/" + tipoReferencia.toLowerCase();
 
         // 2. Subir imagen a la nube

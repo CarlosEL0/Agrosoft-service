@@ -5,6 +5,7 @@ import com.agrosoft.api.features.crops.entities.EtapaCrecimientoEntity;
 import com.agrosoft.api.features.crops.mappers.EtapaCrecimientoMapper;
 import com.agrosoft.api.features.crops.repositories.EtapaCrecimientoRepository;
 import com.agrosoft.api.features.crops.service.EtapaCrecimientoService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class EtapaCrecimientoServiceImpl implements EtapaCrecimientoService {
     @Override
     public EtapaCrecimientoEntity obtenerPorId(UUID id) {
         return etapaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Etapa no encontrada con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Etapa no encontrada con ID: " + id));
     }
 
     @Override

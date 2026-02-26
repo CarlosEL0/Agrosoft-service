@@ -5,6 +5,7 @@ import com.agrosoft.api.features.crops.entities.FaseAgricolaEntity;
 import com.agrosoft.api.features.crops.mappers.FaseAgricolaMapper;
 import com.agrosoft.api.features.crops.repositories.FaseAgricolaRepository;
 import com.agrosoft.api.features.crops.service.FaseAgricolaService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class FaseAgricolaServiceImpl implements FaseAgricolaService {
     @Override
     public FaseAgricolaEntity obtenerPorId(UUID id) {
         return faseAgricolaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Fase no encontrada con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Fase no encontrada con ID: " + id));
     }
 
     @Override

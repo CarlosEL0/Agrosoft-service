@@ -3,6 +3,7 @@ package com.agrosoft.api.features.crops.controllers;
 import com.agrosoft.api.features.crops.dto.CultivoRequestDTO;
 import com.agrosoft.api.features.crops.entities.CultivoEntity;
 import com.agrosoft.api.features.crops.service.CultivoService;
+import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,31 +20,31 @@ public class CultivoController {
     private final CultivoService cultivoService;
 
     @PostMapping
-    public ResponseEntity<CultivoEntity> crearCultivo(@RequestBody CultivoRequestDTO request) {
+    public ResponseEntity<ApiResponse<CultivoEntity>> crearCultivo(@RequestBody CultivoRequestDTO request) {
         CultivoEntity nuevoCultivo = cultivoService.crearCultivo(request);
-        return new ResponseEntity<>(nuevoCultivo, HttpStatus.CREATED);
+        return new ResponseEntity<>(ApiResponse.success("Cultivo creado exitosamente", nuevoCultivo), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<CultivoEntity>> obtenerTodos() {
-        return ResponseEntity.ok(cultivoService.obtenerTodos());
+    public ResponseEntity<ApiResponse<List<CultivoEntity>>> obtenerTodos() {
+        return ResponseEntity.ok(ApiResponse.success("Lista de cultivos recuperada", cultivoService.obtenerTodos()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CultivoEntity> obtenerPorId(@PathVariable UUID id) {
-        return ResponseEntity.ok(cultivoService.obtenerPorId(id));
+    public ResponseEntity<ApiResponse<CultivoEntity>> obtenerPorId(@PathVariable UUID id) {
+        return ResponseEntity.ok(ApiResponse.success("Cultivo recuperado", cultivoService.obtenerPorId(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CultivoEntity> actualizarCultivo(
+    public ResponseEntity<ApiResponse<CultivoEntity>> actualizarCultivo(
             @PathVariable UUID id,
             @RequestBody CultivoRequestDTO request) {
-        return ResponseEntity.ok(cultivoService.actualizarCultivo(id, request));
+        return ResponseEntity.ok(ApiResponse.success("Cultivo actualizado exitosamente", cultivoService.actualizarCultivo(id, request)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCultivo(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> eliminarCultivo(@PathVariable UUID id) {
         cultivoService.eliminarCultivo(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("Cultivo eliminado correctamente"));
     }
 }

@@ -13,6 +13,8 @@ import com.agrosoft.api.features.notifications.mappers.NotificacionMapper;
 import com.agrosoft.api.features.notifications.repositories.DescripcionNotificacionRepository;
 import com.agrosoft.api.features.notifications.repositories.NotificacionRepository;
 import com.agrosoft.api.features.notifications.service.NotificacionService;
+import com.agrosoft.api.shared.exceptions.IntegrationException;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +51,7 @@ public class NotificacionServiceImpl implements NotificacionService {
         // 2. Obtener plantilla
         DescripcionNotificacion plantilla = descripcionRepository
                 .findByTipoNotificacion("FIN_ETAPA")
-                .orElseThrow(() -> new RuntimeException("Error: Plantilla 'FIN_ETAPA' no encontrada en DB"));
+                .orElseThrow(() -> new ResourceNotFoundException("Error: Plantilla 'FIN_ETAPA' no encontrada en DB"));
 
         for (EtapaCrecimientoEntity etapa : etapasVencidas) {
 
@@ -72,7 +74,7 @@ public class NotificacionServiceImpl implements NotificacionService {
                         .build();
 
                 notificacionRepository.save(notificacion);
-            } catch (Exception e) {
+            } catch (IntegrationException e) {
                 System.err.println("Error generando notificacion para etapa: " + etapa.getIdEtapa());
             }
         }
@@ -89,16 +91,16 @@ public class NotificacionServiceImpl implements NotificacionService {
     @Override
     public void marcarComoLeida(UUID idNotificacion) {
         Notificacion notificacion = notificacionRepository.findById(idNotificacion)
-                .orElseThrow(() -> new RuntimeException("Notificación no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Notificación no encontrada"));
         notificacion.setLeido(true);
         notificacionRepository.save(notificacion);
     }
 
     private UUID obtenerIdUsuario(UUID idCiclo) {
         FaseAgricolaEntity fase = faseRepository.findById(idCiclo)
-                .orElseThrow(() -> new RuntimeException("Fase no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Fase no encontrada"));
         CultivoEntity cultivo = cultivoRepository.findById(fase.getIdCultivo())
-                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
         return cultivo.getIdUsuario();
     }
 }

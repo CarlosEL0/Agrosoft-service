@@ -1,4 +1,4 @@
-package com.agrosoft.api.features.ai_analysis;
+package com.agrosoft.api.features.ai_analysis.controllers;
 
 import com.agrosoft.api.features.ai_analysis.dto.AnalisisIaRequestDTO;
 import com.agrosoft.api.features.ai_analysis.dto.AnalisisIaResponseDTO;

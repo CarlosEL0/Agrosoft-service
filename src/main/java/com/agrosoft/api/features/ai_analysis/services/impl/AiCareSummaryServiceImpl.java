@@ -16,7 +16,7 @@ import com.agrosoft.api.features.ai_analysis.repositories.RecomendacionRepositor
 import com.agrosoft.api.features.ai_analysis.services.AiCareSummaryService;
 import com.agrosoft.api.features.care_events.entities.EventoCuidado;
 import com.agrosoft.api.features.care_events.repositories.EventoCuidadoRepository;
-import com.agrosoft.api.features.crops.entities.CultivoEntity;
+import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.shared.exceptions.IntegrationException;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
@@ -55,7 +55,7 @@ public class AiCareSummaryServiceImpl implements AiCareSummaryService {
     @Override
     @Transactional
     public AnalisisIaResponseDTO generarResumenCuidados(ResumenCuidadosRequestDTO request) {
-        CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
+        Cultivo cultivo = cultivoRepository.findById(request.getIdCultivo())
                 .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
         List<EventoCuidado> eventos = eventoCuidadoRepository.findAll();

@@ -23,7 +23,7 @@ import java.util.UUID;
                 @Index(name = "idx_cultivo_tipo", columnList = "tipo_cultivo")
         }
 )
-public class CultivoEntity {
+public class Cultivo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

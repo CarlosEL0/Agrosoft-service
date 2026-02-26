@@ -7,7 +7,7 @@ import com.agrosoft.api.features.ai_analysis.dto.groq.GroqResponseDTO;
 import com.agrosoft.api.features.ai_analysis.entities.AnalisisIa;
 import com.agrosoft.api.features.ai_analysis.prompts.AiPromptProvider;
 import com.agrosoft.api.features.ai_analysis.repositories.AnalisisIaRepository;
-import com.agrosoft.api.features.crops.entities.CultivoEntity;
+import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.harvest.dto.ReporteCosechaRequestDTO;
 import com.agrosoft.api.features.harvest.dto.ReporteCosechaResponseDTO;
@@ -58,7 +58,7 @@ public class ReporteCosechaServiceImpl implements ReporteCosechaService {
         }
 
         // 2. Obtener el contexto del cultivo
-        CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
+        Cultivo cultivo = cultivoRepository.findById(request.getIdCultivo())
                 .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
 

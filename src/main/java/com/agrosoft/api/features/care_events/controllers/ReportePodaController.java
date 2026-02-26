@@ -2,7 +2,7 @@ package com.agrosoft.api.features.care_events.controllers;
 
 import com.agrosoft.api.features.care_events.dto.ReportePodaRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReportePoda;
-import com.agrosoft.api.features.care_events.service.ReportePodaService;
+import com.agrosoft.api.features.care_events.services.ReportePodaService;
 import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

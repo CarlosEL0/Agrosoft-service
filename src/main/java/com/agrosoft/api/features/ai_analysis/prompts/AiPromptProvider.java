@@ -1,7 +1,7 @@
 package com.agrosoft.api.features.ai_analysis.prompts;
 
 import com.agrosoft.api.features.ai_analysis.dto.AnalisisIaRequestDTO;
-import com.agrosoft.api.features.crops.entities.CultivoEntity;
+import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.monitoring.entities.Irregularidad;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ public class AiPromptProvider {
             """;
     }
 
-    public String buildUserPrompt(CultivoEntity cultivo, Irregularidad plaga, AnalisisIaRequestDTO request) {
+    public String buildUserPrompt(Cultivo cultivo, Irregularidad plaga, AnalisisIaRequestDTO request) {
         String baseContext = String.format("""
             Datos Básicos del Cultivo:
             - Nombre: %s
@@ -92,7 +92,7 @@ public class AiPromptProvider {
             """;
     }
 
-    public String buildHarvestUserPrompt(CultivoEntity cultivo, com.agrosoft.api.features.harvest.dto.ReporteCosechaRequestDTO request) {
+    public String buildHarvestUserPrompt(Cultivo cultivo, com.agrosoft.api.features.harvest.dto.ReporteCosechaRequestDTO request) {
         return String.format("""
             Datos Básicos del Cultivo:
             - Nombre: %s
@@ -136,7 +136,7 @@ public class AiPromptProvider {
             """;
     }
 
-    public String buildCareSummaryUserPrompt(CultivoEntity cultivo, String historialCuidados, String preguntaAdicional) {
+    public String buildCareSummaryUserPrompt(Cultivo cultivo, String historialCuidados, String preguntaAdicional) {
         return String.format("""
             Datos Básicos del Cultivo:
             - Nombre: %s
@@ -180,7 +180,7 @@ public class AiPromptProvider {
             """;
     }
 
-    public String buildGrowthInterpretationUserPrompt(CultivoEntity cultivo, String historialCrecimiento, String preguntaAdicional) {
+    public String buildGrowthInterpretationUserPrompt(Cultivo cultivo, String historialCrecimiento, String preguntaAdicional) {
         return String.format("""
             Parámetros Teóricos del Cultivo:
             - Nombre: %s

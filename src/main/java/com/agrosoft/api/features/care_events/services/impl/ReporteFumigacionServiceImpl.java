@@ -4,7 +4,7 @@ import com.agrosoft.api.features.care_events.dto.ReporteFumigacionRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteFumigacion;
 import com.agrosoft.api.features.care_events.mappers.ReporteFumigacionMapper;
 import com.agrosoft.api.features.care_events.repositories.ReporteFumigacionRepository;
-import com.agrosoft.api.features.care_events.service.ReporteFumigacionService;
+import com.agrosoft.api.features.care_events.services.ReporteFumigacionService;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

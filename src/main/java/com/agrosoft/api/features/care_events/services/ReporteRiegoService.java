@@ -1,4 +1,4 @@
-package com.agrosoft.api.features.care_events.service;
+package com.agrosoft.api.features.care_events.services;
 
 import com.agrosoft.api.features.care_events.dto.ReporteRiegoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteRiego;

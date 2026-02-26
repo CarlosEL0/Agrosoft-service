@@ -4,7 +4,7 @@ import com.agrosoft.api.features.care_events.dto.ReportePodaRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReportePoda;
 import com.agrosoft.api.features.care_events.mappers.ReportePodaMapper;
 import com.agrosoft.api.features.care_events.repositories.ReportePodaRepository;
-import com.agrosoft.api.features.care_events.service.ReportePodaService;
+import com.agrosoft.api.features.care_events.services.ReportePodaService;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

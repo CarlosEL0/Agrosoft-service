@@ -2,7 +2,7 @@ package com.agrosoft.api.features.care_events.controllers;
 
 import com.agrosoft.api.features.care_events.dto.ReporteFumigacionRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteFumigacion;
-import com.agrosoft.api.features.care_events.service.ReporteFumigacionService;
+import com.agrosoft.api.features.care_events.services.ReporteFumigacionService;
 import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

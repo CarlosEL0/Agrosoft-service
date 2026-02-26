@@ -4,7 +4,7 @@ import com.agrosoft.api.features.care_events.dto.ReporteRiegoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteRiego;
 import com.agrosoft.api.features.care_events.mappers.ReporteRiegoMapper;
 import com.agrosoft.api.features.care_events.repositories.ReporteRiegoRepository;
-import com.agrosoft.api.features.care_events.service.ReporteRiegoService;
+import com.agrosoft.api.features.care_events.services.ReporteRiegoService;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

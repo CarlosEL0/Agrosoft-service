@@ -18,7 +18,7 @@ import java.util.UUID;
                 @Index(name = "idx_etapa_orden", columnList = "orden_etapa")
         }
 )
-public class EtapaCrecimientoEntity {
+public class EtapaCrecimiento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

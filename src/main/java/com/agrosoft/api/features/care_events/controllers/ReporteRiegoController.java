@@ -2,7 +2,7 @@ package com.agrosoft.api.features.care_events.controllers;
 
 import com.agrosoft.api.features.care_events.dto.ReporteRiegoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteRiego;
-import com.agrosoft.api.features.care_events.service.ReporteRiegoService;
+import com.agrosoft.api.features.care_events.services.ReporteRiegoService;
 import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

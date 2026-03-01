@@ -203,4 +203,36 @@ public class AiPromptProvider {
                 preguntaAdicional != null ? preguntaAdicional : "Ninguno"
         );
     }
+
+    public String buildHarvestUserPrompt(Cultivo cultivo, com.agrosoft.api.features.harvest.dto.ReporteCosechaRequestDTO request, String historialPlagas, String historialCuidados) {
+        return String.format("""
+            Datos Básicos del Cultivo:
+            - Nombre: %s
+            - Tipo: %s
+            - Fecha de Siembra: %s
+            
+            Datos Reales de la Cosecha:
+            - Fecha de Cosecha: %s
+            - Cantidad Cosechada Real: %s kg
+            - Calidad del Cultivo: %s
+            
+            HISTORIAL DEL CICLO:
+            Plagas y Enfermedades presentadas:
+            %s
+            
+            Cuidados Aplicados (Riegos, Fumigaciones, etc.):
+            %s
+            
+            Instrucciones: Genera el JSON del reporte de cosecha. Analiza profundamente el historial proporcionado para deducir y llenar los campos 'factoresExito' y 'areasMejora'. Justifica por qué el rendimiento y el costo fueron afectados basándote en las plagas y cuidados reales.
+            """,
+                cultivo.getNombreCultivo(),
+                cultivo.getTipoCultivo(),
+                cultivo.getFechaSiembra(),
+                request.getFechaCosecha(),
+                request.getCantidadCosechada(),
+                request.getCalidadCultivo(),
+                historialPlagas.isEmpty() ? "No hubo plagas reportadas." : historialPlagas,
+                historialCuidados.isEmpty() ? "No se registraron cuidados especiales." : historialCuidados
+        );
+    }
 }

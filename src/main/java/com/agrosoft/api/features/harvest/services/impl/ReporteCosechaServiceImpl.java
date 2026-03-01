@@ -7,6 +7,7 @@ import com.agrosoft.api.features.ai_analysis.dto.groq.GroqResponseDTO;
 import com.agrosoft.api.features.ai_analysis.entities.AnalisisIa;
 import com.agrosoft.api.features.ai_analysis.prompts.AiPromptProvider;
 import com.agrosoft.api.features.ai_analysis.repositories.AnalisisIaRepository;
+import com.agrosoft.api.features.care_events.repositories.EventoCuidadoRepository;
 import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.harvest.dto.ReporteCosechaRequestDTO;
@@ -15,6 +16,7 @@ import com.agrosoft.api.features.harvest.entities.ReporteCosecha;
 import com.agrosoft.api.features.harvest.mappers.ReporteCosechaMapper;
 import com.agrosoft.api.features.harvest.repositories.ReporteCosechaRepository;
 import com.agrosoft.api.features.harvest.services.ReporteCosechaService;
+import com.agrosoft.api.features.monitoring.repositories.IrregularidadRepository;
 import com.agrosoft.api.shared.exceptions.BusinessRuleException;
 import com.agrosoft.api.shared.exceptions.IntegrationException;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,8 @@ public class ReporteCosechaServiceImpl implements ReporteCosechaService {
 
     private final ReporteCosechaRepository reporteCosechaRepository;
     private final ReporteCosechaMapper mapper;
+    private final IrregularidadRepository irregularidadRepository;
+    private final EventoCuidadoRepository eventoCuidadoRepository;
 
     private final GroqClient groqClient;
     private final AiPromptProvider promptProvider;
@@ -62,10 +67,20 @@ public class ReporteCosechaServiceImpl implements ReporteCosechaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
 
+        // Extraer historial de plagas
+        String historialPlagas = irregularidadRepository.findByIdCultivoOrderByFechaDeteccionDesc(cultivo.getIdCultivo())
+                .stream()
+                .map(p -> String.format("- %s (Severidad: %s, Daño: %s)", p.getNombrePlaga(), p.getSeveridad(), p.getNivelDano()))
+                .collect(Collectors.joining("\n"));
 
-        // 3. Armar los Prompts para Groq
+        // Extraer historial de eventos de cuidado
+        String historialCuidados = eventoCuidadoRepository.findByIdCultivoOrderByFechaEventoDesc(cultivo.getIdCultivo())
+                .stream()
+                .map(e -> String.format("- %s: %s", e.getTipoEvento().toUpperCase(), e.getDescripcion()))
+                .collect(Collectors.joining("\n"));
+
         String systemPrompt = promptProvider.getHarvestSystemPrompt();
-        String userPrompt = promptProvider.buildHarvestUserPrompt(cultivo, request);
+        String userPrompt = promptProvider.buildHarvestUserPrompt(cultivo, request, historialPlagas, historialCuidados);
 
         // 4. Llamar a Groq
         GroqResponseDTO groqResponse = llamarGroq(systemPrompt, userPrompt);

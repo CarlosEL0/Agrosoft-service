@@ -20,6 +20,7 @@ import com.agrosoft.api.features.monitoring.entities.RegistroCrecimiento;
 import com.agrosoft.api.features.monitoring.repositories.RegistroCrecimientoRepository;
 import com.agrosoft.api.shared.exceptions.IntegrationException;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
+import com.agrosoft.api.shared.utils.AiJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -105,7 +106,8 @@ public class AiGrowthInterpretationServiceImpl implements AiGrowthInterpretation
 
     private AnalisisIaResponseDTO procesarYGuardarRespuesta(String json, java.util.UUID idCultivo) {
         try {
-            JsonNode rootNode = objectMapper.readTree(json);
+            String JsonClean = AiJson.cleanJsonResponse(json);
+            JsonNode rootNode = objectMapper.readTree(JsonClean);
 
             // Guardar Análisis en la BD
             AnalisisIa analisisGuardado = analisisIaRepository.save(AnalisisIa.builder()

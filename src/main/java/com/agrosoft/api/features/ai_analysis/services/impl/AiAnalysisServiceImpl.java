@@ -20,6 +20,7 @@ import com.agrosoft.api.features.monitoring.entities.Irregularidad;
 import com.agrosoft.api.features.monitoring.repositories.IrregularidadRepository;
 import com.agrosoft.api.shared.exceptions.IntegrationException;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
+import com.agrosoft.api.shared.utils.AiJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -93,7 +94,8 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
         String jsonRespuestaGroq = groqResponse.getChoices().get(0).getMessage().getContent();
 
         try {
-            JsonNode rootNode = objectMapper.readTree(jsonRespuestaGroq);
+            String JsonClean = AiJson.cleanJsonResponse(jsonRespuestaGroq);
+            JsonNode rootNode = objectMapper.readTree(JsonClean);
             if (!rootNode.has("resultadoAnalisis")) {
                 throw new IntegrationException("El JSON de la IA es inválido.");
             }

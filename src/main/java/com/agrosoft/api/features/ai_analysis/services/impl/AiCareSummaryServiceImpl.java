@@ -20,6 +20,7 @@ import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.shared.exceptions.IntegrationException;
 import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
+import com.agrosoft.api.shared.utils.AiJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -107,7 +108,8 @@ public class AiCareSummaryServiceImpl implements AiCareSummaryService {
 
     private AnalisisIaResponseDTO procesarYGuardarRespuesta(String json, java.util.UUID idCultivo) {
         try {
-            JsonNode rootNode = objectMapper.readTree(json);
+            String JsonClean = AiJson.cleanJsonResponse(json);
+            JsonNode rootNode = objectMapper.readTree(JsonClean);
 
             // A. Guardar Análisis
             AnalisisIa analisisGuardado = analisisIaRepository.save(AnalisisIa.builder()

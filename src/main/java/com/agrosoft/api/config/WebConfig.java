@@ -12,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**") // Aplica a todos nuestros endpoints (ej. /api/v1/...)
                 .allowedOrigins(
                         "http://localhost:3000", // Puerto por defecto de Next.js/React
-                        "http://localhost:5173"  // Puerto por defecto de Vite (por si acaso)
+                        "http://localhost:5173",  // Puerto por defecto de Vite (por si acaso)
+                        "http://localhost:8081"   // Puerto para exposicion web
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH") // Métodos permitidos
                 .allowedHeaders("*") // Permitimos cualquier cabecera (incluyendo Authorization para PASETO)

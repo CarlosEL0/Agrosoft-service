@@ -35,6 +35,6 @@ jobs:
 
       # 5. Desplegar usando el token secreto
       - name: Deploy to Railway
-        run: railway up --detach
+        run: railway up --service agrosoft-api --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

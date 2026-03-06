@@ -14,10 +14,13 @@ import com.agrosoft.api.features.ai_analysis.prompts.AiPromptProvider;
 import com.agrosoft.api.features.ai_analysis.repositories.AnalisisIaRepository;
 import com.agrosoft.api.features.ai_analysis.repositories.RecomendacionRepository;
 import com.agrosoft.api.features.ai_analysis.services.AiAnalysisService;
-import com.agrosoft.api.features.crops.entities.CultivoEntity;
+import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
 import com.agrosoft.api.features.monitoring.entities.Irregularidad;
 import com.agrosoft.api.features.monitoring.repositories.IrregularidadRepository;
+import com.agrosoft.api.shared.exceptions.IntegrationException;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
+import com.agrosoft.api.shared.utils.AiJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -52,14 +55,14 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
     public AnalisisIaResponseDTO generarAnalisis(AnalisisIaRequestDTO request) {
 
         // 1. OBTENER EL CULTIVO
-        CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
-                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
+        Cultivo cultivo = cultivoRepository.findById(request.getIdCultivo())
+                .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
         // 2. OBTENER LA PLAGA
         Irregularidad plaga = null;
         if (request.getIdIrregularidad() != null) {
             plaga = irregularidadRepository.findById(request.getIdIrregularidad())
-                    .orElseThrow(() -> new RuntimeException("Irregularidad no encontrada"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Irregularidad no encontrada"));
         }
 
         // 3. CONSTRUIR PROMPT E INYECTAR DATOS
@@ -87,13 +90,14 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
         return groqClient.generarRespuesta("Bearer " + apiKey, groqRequest);
     }
 
-    private AnalisisIaResponseDTO procesarYGuardarRespuesta(GroqResponseDTO groqResponse, CultivoEntity cultivo, AnalisisIaRequestDTO request) {
+    private AnalisisIaResponseDTO procesarYGuardarRespuesta(GroqResponseDTO groqResponse, Cultivo cultivo, AnalisisIaRequestDTO request) {
         String jsonRespuestaGroq = groqResponse.getChoices().get(0).getMessage().getContent();
 
         try {
-            JsonNode rootNode = objectMapper.readTree(jsonRespuestaGroq);
+            String JsonClean = AiJson.cleanJsonResponse(jsonRespuestaGroq);
+            JsonNode rootNode = objectMapper.readTree(JsonClean);
             if (!rootNode.has("resultadoAnalisis")) {
-                throw new RuntimeException("El JSON de la IA es inválido.");
+                throw new IntegrationException("El JSON de la IA es inválido.");
             }
 
             // A. Guardar Análisis
@@ -124,7 +128,7 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
             return aiAnalysisMapper.toResponseDTO(analisisGuardado, recomendacionesDTO);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error al procesar la IA: " + e.getMessage(), e);
+            throw new IntegrationException("Error al procesar la IA: " + e.getMessage(), e);
         }
     }
 }

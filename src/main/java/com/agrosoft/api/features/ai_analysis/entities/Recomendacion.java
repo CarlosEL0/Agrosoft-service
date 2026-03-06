@@ -34,8 +34,9 @@ public class Recomendacion {
     private String descripcion;
 
     @Column(name = "prioridad")
-    private String prioridad; // baja, media, alta
+    private String prioridad;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean aplicada = false;
 }

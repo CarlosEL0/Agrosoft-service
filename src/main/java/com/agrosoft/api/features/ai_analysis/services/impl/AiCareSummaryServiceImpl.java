@@ -16,8 +16,11 @@ import com.agrosoft.api.features.ai_analysis.repositories.RecomendacionRepositor
 import com.agrosoft.api.features.ai_analysis.services.AiCareSummaryService;
 import com.agrosoft.api.features.care_events.entities.EventoCuidado;
 import com.agrosoft.api.features.care_events.repositories.EventoCuidadoRepository;
-import com.agrosoft.api.features.crops.entities.CultivoEntity;
+import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.repositories.CultivoRepository;
+import com.agrosoft.api.shared.exceptions.IntegrationException;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
+import com.agrosoft.api.shared.utils.AiJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -53,8 +56,8 @@ public class AiCareSummaryServiceImpl implements AiCareSummaryService {
     @Override
     @Transactional
     public AnalisisIaResponseDTO generarResumenCuidados(ResumenCuidadosRequestDTO request) {
-        CultivoEntity cultivo = cultivoRepository.findById(request.getIdCultivo())
-                .orElseThrow(() -> new RuntimeException("Cultivo no encontrado"));
+        Cultivo cultivo = cultivoRepository.findById(request.getIdCultivo())
+                .orElseThrow(() -> new ResourceNotFoundException("Cultivo no encontrado"));
 
         List<EventoCuidado> eventos = eventoCuidadoRepository.findAll();
 
@@ -105,7 +108,8 @@ public class AiCareSummaryServiceImpl implements AiCareSummaryService {
 
     private AnalisisIaResponseDTO procesarYGuardarRespuesta(String json, java.util.UUID idCultivo) {
         try {
-            JsonNode rootNode = objectMapper.readTree(json);
+            String JsonClean = AiJson.cleanJsonResponse(json);
+            JsonNode rootNode = objectMapper.readTree(JsonClean);
 
             // A. Guardar Análisis
             AnalisisIa analisisGuardado = analisisIaRepository.save(AnalisisIa.builder()
@@ -135,7 +139,7 @@ public class AiCareSummaryServiceImpl implements AiCareSummaryService {
             return aiAnalysisMapper.toResponseDTO(analisisGuardado, recomendacionesDTO);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error procesando IA: " + e.getMessage(), e);
+            throw new IntegrationException("Error procesando IA: " + e.getMessage(), e);
         }
     }
 }

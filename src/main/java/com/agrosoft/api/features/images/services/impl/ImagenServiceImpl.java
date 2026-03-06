@@ -4,7 +4,7 @@ import com.agrosoft.api.features.images.dto.ImagenResponseDTO;
 import com.agrosoft.api.features.images.entities.Imagen;
 import com.agrosoft.api.features.images.mappers.ImagenMapper;
 import com.agrosoft.api.features.images.repositories.ImagenRepository;
-import com.agrosoft.api.features.images.service.ImagenService;
+import com.agrosoft.api.features.images.services.ImagenService;
 import com.agrosoft.api.shared.services.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class ImagenServiceImpl implements ImagenService {
             String tipoReferencia
     ) throws IOException {
 
-        // 1. Definir carpeta en Cloudinary (ej: agrosoft/evidencias/riego)
+        // 1. Definir carpeta en Cloudinary
         String carpeta = "evidencias/" + tipoReferencia.toLowerCase();
 
         // 2. Subir imagen a la nube

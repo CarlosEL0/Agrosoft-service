@@ -6,6 +6,7 @@ import com.agrosoft.api.features.monitoring.entities.Irregularidad;
 import com.agrosoft.api.features.monitoring.mappers.IrregularidadMapper;
 import com.agrosoft.api.features.monitoring.repositories.IrregularidadRepository;
 import com.agrosoft.api.features.monitoring.services.IrregularidadService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +68,6 @@ public class IrregularidadServiceImpl implements IrregularidadService {
     // ==========================================
     private Irregularidad getIrregularidadEntity(UUID id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Irregularidad no encontrada con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Irregularidad no encontrada con ID: " + id));
     }
 }

@@ -4,7 +4,8 @@ import com.agrosoft.api.features.care_events.dto.EventoCuidadoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.EventoCuidado;
 import com.agrosoft.api.features.care_events.mappers.EventoCuidadoMapper;
 import com.agrosoft.api.features.care_events.repositories.EventoCuidadoRepository;
-import com.agrosoft.api.features.care_events.service.EventoCuidadoService;
+import com.agrosoft.api.features.care_events.services.EventoCuidadoService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class EventoCuidadoServiceImpl implements EventoCuidadoService {
     @Override
     public EventoCuidado obtenerPorId(UUID id) {
         return eventoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado con ID: " + id));
     }
 
     @Override

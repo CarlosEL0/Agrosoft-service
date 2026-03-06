@@ -1,7 +1,10 @@
 package com.agrosoft.api.features.images.controllers;
 
 import com.agrosoft.api.features.images.dto.ImagenResponseDTO;
-import com.agrosoft.api.features.images.service.ImagenService;
+import com.agrosoft.api.features.images.services.ImagenService;
+import com.agrosoft.api.shared.exceptions.BusinessRuleException;
+import com.agrosoft.api.shared.exceptions.IntegrationException;
+import com.agrosoft.api.shared.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,25 +23,19 @@ public class ImagenController {
     private final ImagenService imagenService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ImagenResponseDTO> subirImagen(
+    public ResponseEntity<ApiResponse<ImagenResponseDTO>> subirImagen(
             @RequestParam("archivo") MultipartFile archivo,
             @RequestParam(value = "descripcion", required = false) String descripcion,
             @RequestParam("idReferencia") UUID idReferencia,
-            @RequestParam("tipo") String tipo // Ej: "RIEGO", "PODA", "CRECIMIENTO", "IRREGULARIDAD"
+            @RequestParam("tipo") String tipo
     ) {
         try {
-            ImagenResponseDTO nuevaImagen = imagenService.subirEvidencia(
-                    archivo,
-                    descripcion,
-                    idReferencia,
-                    tipo
-            );
-            return ResponseEntity.ok(nuevaImagen);
+            ImagenResponseDTO nuevaImagen = imagenService.subirEvidencia(archivo, descripcion, idReferencia, tipo);
+            return ResponseEntity.ok(ApiResponse.success("Imagen subida exitosamente", nuevaImagen));
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
+            throw new IntegrationException("Error al comunicarse con Cloudinary: " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            // Retorna 400 si el "tipo" no es válido
-            return ResponseEntity.badRequest().build();
+            throw new BusinessRuleException("Tipo de imagen no válido: " + tipo);
         }
     }
     @GetMapping

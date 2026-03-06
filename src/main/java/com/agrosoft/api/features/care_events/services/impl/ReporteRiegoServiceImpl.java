@@ -4,7 +4,8 @@ import com.agrosoft.api.features.care_events.dto.ReporteRiegoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteRiego;
 import com.agrosoft.api.features.care_events.mappers.ReporteRiegoMapper;
 import com.agrosoft.api.features.care_events.repositories.ReporteRiegoRepository;
-import com.agrosoft.api.features.care_events.service.ReporteRiegoService;
+import com.agrosoft.api.features.care_events.services.ReporteRiegoService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +30,13 @@ public class ReporteRiegoServiceImpl implements ReporteRiegoService {
     @Override
     public ReporteRiego obtenerPorEvento(UUID idEvento) {
         return riegoRepository.findByIdEvento(idEvento)
-                .orElseThrow(() -> new RuntimeException("No hay reporte de riego para el evento: " + idEvento));
+                .orElseThrow(() -> new ResourceNotFoundException("No hay reporte de riego para el evento: " + idEvento));
     }
 
     @Override
     public ReporteRiego actualizarReporte(UUID idRiego, ReporteRiegoRequestDTO request) {
         ReporteRiego reporte = riegoRepository.findById(idRiego)
-                .orElseThrow(() -> new RuntimeException("Reporte no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado"));
         riegoMapper.updateEntityFromDto(request, reporte);
         return riegoRepository.save(reporte);
     }

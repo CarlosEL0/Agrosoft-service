@@ -1,6 +1,6 @@
 package com.agrosoft.api.features.crops.repositories;
 
-import com.agrosoft.api.features.crops.entities.EtapaCrecimientoEntity;
+import com.agrosoft.api.features.crops.entities.EtapaCrecimiento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface EtapaCrecimientoRepository extends JpaRepository<EtapaCrecimientoEntity, UUID> {
-    List<EtapaCrecimientoEntity> findByIdCicloOrderByOrdenEtapaAsc(UUID idCiclo);
-    List<EtapaCrecimientoEntity> findByFechaFin(LocalDate fechaFin);
+public interface EtapaCrecimientoRepository extends JpaRepository<EtapaCrecimiento, UUID> {
+    List<EtapaCrecimiento> findByIdCicloOrderByOrdenEtapaAsc(UUID idCiclo);
+    List<EtapaCrecimiento> findByFechaFin(LocalDate fechaFin);
 }

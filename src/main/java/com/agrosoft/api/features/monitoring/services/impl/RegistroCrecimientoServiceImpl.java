@@ -7,6 +7,7 @@ import com.agrosoft.api.features.monitoring.entities.RegistroCrecimiento;
 import com.agrosoft.api.features.monitoring.mappers.RegistroCrecimientoMapper;
 import com.agrosoft.api.features.monitoring.repositories.RegistroCrecimientoRepository;
 import com.agrosoft.api.features.monitoring.services.RegistroCrecimientoService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public class RegistroCrecimientoServiceImpl implements RegistroCrecimientoServic
     @Transactional
     public RegistroCrecimientoResponseDTO registrarCrecimiento(RegistroCrecimientoRequestDTO request) {
         if (!cultivoRepository.existsById(request.getIdCultivo())) {
-            throw new RuntimeException("El cultivo con ID " + request.getIdCultivo() + " no existe.");
+            throw new ResourceNotFoundException("El cultivo con ID " + request.getIdCultivo() + " no existe.");
         }
 
         RegistroCrecimiento entidad = mapper.toEntity(request);
@@ -55,7 +56,7 @@ public class RegistroCrecimientoServiceImpl implements RegistroCrecimientoServic
         // Si intentan cambiar el cultivo a uno que no existe, validamos
         if (request.getIdCultivo() != null && !request.getIdCultivo().equals(existente.getIdCultivo())) {
             if (!cultivoRepository.existsById(request.getIdCultivo())) {
-                throw new RuntimeException("El nuevo cultivo asignado no existe.");
+                throw new ResourceNotFoundException("El nuevo cultivo asignado no existe.");
             }
         }
 
@@ -74,6 +75,6 @@ public class RegistroCrecimientoServiceImpl implements RegistroCrecimientoServic
     // Método privado para reutilizar la búsqueda y lanzar excepción estandarizada (SRP)
     private RegistroCrecimiento getEntidad(UUID id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Registro de crecimiento no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Registro de crecimiento no encontrado con ID: " + id));
     }
 }

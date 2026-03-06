@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,5 +40,15 @@ public class ImagenController {
             // Retorna 400 si el "tipo" no es válido
             return ResponseEntity.badRequest().build();
         }
+    }
+    @GetMapping
+    public ResponseEntity<List<ImagenResponseDTO>> obtenerTodasLasImagenes() {
+        return ResponseEntity.ok(imagenService.obtenerTodasLasImagenes());
+    }
+
+    // Obtener UNA sola imagen por su UUID
+    @GetMapping("/{id}")
+    public ResponseEntity<ImagenResponseDTO> obtenerImagenPorId(@PathVariable UUID id) {
+        return ResponseEntity.ok(imagenService.obtenerImagenPorId(id));
     }
 }

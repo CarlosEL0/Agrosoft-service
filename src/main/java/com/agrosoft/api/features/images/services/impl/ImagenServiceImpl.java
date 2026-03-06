@@ -5,6 +5,7 @@ import com.agrosoft.api.features.images.entities.Imagen;
 import com.agrosoft.api.features.images.mappers.ImagenMapper;
 import com.agrosoft.api.features.images.repositories.ImagenRepository;
 import com.agrosoft.api.features.images.services.ImagenService;
+import com.agrosoft.api.shared.exceptions.ResourceNotFoundException;
 import com.agrosoft.api.shared.services.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ImagenServiceImpl implements ImagenService {
+
     private final ImagenRepository imagenRepository;
     private final CloudinaryService cloudinaryService;
     private final ImagenMapper imagenMapper;
@@ -31,7 +33,7 @@ public class ImagenServiceImpl implements ImagenService {
             String tipoReferencia
     ) throws IOException {
 
-        // 1. Definir carpeta en Cloudinary
+        // 1. Definir carpeta en Cloudinary (ej: agrosoft/evidencias/riego)
         String carpeta = "evidencias/" + tipoReferencia.toLowerCase();
 
         // 2. Subir imagen a la nube
@@ -67,9 +69,11 @@ public class ImagenServiceImpl implements ImagenService {
             default:
                 throw new IllegalArgumentException("Tipo de referencia no válido: " + tipoReferencia);
         }
+
         Imagen imagenGuardada = imagenRepository.save(imagen);
         return imagenMapper.toDTO(imagenGuardada);
     }
+
     @Override
     @Transactional(readOnly = true)
     public List<ImagenResponseDTO> obtenerTodasLasImagenes() {
@@ -83,7 +87,7 @@ public class ImagenServiceImpl implements ImagenService {
     @Transactional(readOnly = true)
     public ImagenResponseDTO obtenerImagenPorId(UUID idImagen) {
         Imagen imagen = imagenRepository.findById(idImagen)
-                .orElseThrow(() -> new RuntimeException("Error: Imagen no encontrada con ID: " + idImagen));
+                .orElseThrow(() -> new ResourceNotFoundException("Error: Imagen no encontrada con ID: " + idImagen));
 
         return imagenMapper.toDTO(imagen);
     }

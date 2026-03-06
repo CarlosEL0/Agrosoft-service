@@ -27,10 +27,15 @@ public class ImagenController {
             @RequestParam("archivo") MultipartFile archivo,
             @RequestParam(value = "descripcion", required = false) String descripcion,
             @RequestParam("idReferencia") UUID idReferencia,
-            @RequestParam("tipo") String tipo
+            @RequestParam("tipo") String tipo // Ej: "RIEGO", "PODA", "CRECIMIENTO", "IRREGULARIDAD"
     ) {
         try {
-            ImagenResponseDTO nuevaImagen = imagenService.subirEvidencia(archivo, descripcion, idReferencia, tipo);
+            ImagenResponseDTO nuevaImagen = imagenService.subirEvidencia(
+                    archivo,
+                    descripcion,
+                    idReferencia,
+                    tipo
+            );
             return ResponseEntity.ok(ApiResponse.success("Imagen subida exitosamente", nuevaImagen));
         } catch (IOException e) {
             throw new IntegrationException("Error al comunicarse con Cloudinary: " + e.getMessage());
@@ -38,14 +43,14 @@ public class ImagenController {
             throw new BusinessRuleException("Tipo de imagen no válido: " + tipo);
         }
     }
+
     @GetMapping
-    public ResponseEntity<List<ImagenResponseDTO>> obtenerTodasLasImagenes() {
-        return ResponseEntity.ok(imagenService.obtenerTodasLasImagenes());
+    public ResponseEntity<ApiResponse<List<ImagenResponseDTO>>> obtenerTodasLasImagenes() {
+        return ResponseEntity.ok(ApiResponse.success("Imágenes recuperadas exitosamente", imagenService.obtenerTodasLasImagenes()));
     }
 
-    // Obtener UNA sola imagen por su UUID
     @GetMapping("/{id}")
-    public ResponseEntity<ImagenResponseDTO> obtenerImagenPorId(@PathVariable UUID id) {
-        return ResponseEntity.ok(imagenService.obtenerImagenPorId(id));
+    public ResponseEntity<ApiResponse<ImagenResponseDTO>> obtenerImagenPorId(@PathVariable UUID id) {
+        return ResponseEntity.ok(ApiResponse.success("Imagen recuperada", imagenService.obtenerImagenPorId(id)));
     }
 }

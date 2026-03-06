@@ -15,6 +15,8 @@ public interface ImagenService {
             UUID idReferencia,
             String tipoReferencia
     ) throws IOException;
+
     List<ImagenResponseDTO> obtenerTodasLasImagenes();
+
     ImagenResponseDTO obtenerImagenPorId(UUID idImagen);
 }

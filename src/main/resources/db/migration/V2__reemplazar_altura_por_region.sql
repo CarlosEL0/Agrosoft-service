@@ -6,3 +6,9 @@ ALTER TABLE cultivo ALTER COLUMN region DROP DEFAULT;
 
 -- 3. Borramos la columna vieja de altura que ya no vamos a utilizar
 ALTER TABLE cultivo DROP COLUMN altura_esperada;
+
+ALTER TABLE cultivo
+DROP COLUMN dias_germinacion,
+    DROP COLUMN dias_vegetativo,
+    DROP COLUMN dias_floracion,
+    DROP COLUMN dias_cosecha;

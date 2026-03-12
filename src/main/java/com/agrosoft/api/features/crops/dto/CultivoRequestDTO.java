@@ -17,12 +17,6 @@ public class CultivoRequestDTO {
     @NotNull( message = "La region del cultivo es requerida")
     private String region;
 
-    private String provincia;
-    private String distrito;
-    private Integer diasGerminacion;
-    private Integer diasVegetativo;
-    private Integer diasFloracion;
-    private Integer diasCosecha;
     private Integer tamanoTerreno;
     private Integer cantidadSemillas;
     private BigDecimal phSueloMin;

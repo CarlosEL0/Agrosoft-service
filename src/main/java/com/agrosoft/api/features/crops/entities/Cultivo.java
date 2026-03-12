@@ -48,18 +48,6 @@ public class Cultivo {
     @Column(name = "region", nullable = false)
     private String region;
 
-    @Column(name = "dias_germinacion")
-    private Integer diasGerminacion;
-
-    @Column(name = "dias_vegetativo")
-    private Integer diasVegetativo;
-
-    @Column(name = "dias_floracion")
-    private Integer diasFloracion;
-
-    @Column(name = "dias_cosecha")
-    private Integer diasCosecha;
-
     @Column(name = "tamano_terreno")
     private Integer tamanoTerreno;
 

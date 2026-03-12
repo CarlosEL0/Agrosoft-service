@@ -63,10 +63,10 @@ public class FaseAgricolaServiceImpl implements FaseAgricolaService {
     }
 
     private int calcularDiasEtapa(EtapaPredeterminada etapa, Cultivo cultivo) {
-        int diasGerm = cultivo.getDiasGerminacion() != null ? cultivo.getDiasGerminacion() : 10;
-        int diasVeg = cultivo.getDiasVegetativo() != null ? cultivo.getDiasVegetativo() : 30;
-        int diasFlor = cultivo.getDiasFloracion() != null ? cultivo.getDiasFloracion() : 20;
-        int diasCos = cultivo.getDiasCosecha() != null ? cultivo.getDiasCosecha() : 15;
+        int diasGerm = 10;
+        int diasVeg = 30;
+        int diasFlor = 20;
+        int diasCos = 15;
 
         return switch (etapa) {
             case GERMINACION -> diasGerm;

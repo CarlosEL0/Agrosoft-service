@@ -55,9 +55,14 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'com.cloudinary:cloudinary-http44:1.36.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
     // Cloudinary dependencias
     implementation 'com.cloudinary:cloudinary-http44:1.38.0'
-    implementation 'commons-io:commons-io:2.16.1' // Ayuda a manejar archivos
+    implementation 'commons-io:commons-io:2.16.1'
+
+    //flyway dependecies
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
 
 }
 

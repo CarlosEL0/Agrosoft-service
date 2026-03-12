@@ -94,6 +94,24 @@ public class AiPromptProvider {
             }
             """;
 
+    private static final String SYSTEM_STAGE_PREDICTION_TEMPLATE = """
+            Eres el Agrónomo Planificador del sistema AgroSoft.
+            Tu objetivo es predecir los días que dura cada fase principal de desarrollo de un cultivo específico, considerando su variedad y la región climática (clima, altitud típica) donde fue sembrado.
+            
+            REGLA ESTRICTA: Tu respuesta DEBE ser ÚNICA Y EXCLUSIVAMENTE un objeto JSON válido.
+            No incluyas saludos, ni explicaciones fuera del JSON.
+            
+            El JSON debe tener exactamente esta estructura con valores numéricos enteros (representando los días aproximados que dura cada etapa en esa región). 
+            Usa estrictamente estas 5 claves:
+            {
+              "germinacion": 0,
+              "plantula": 0,
+              "crecimiento": 0,
+              "floracion": 0,
+              "cosecha": 0
+            }
+            """;
+
     // ==========================================
     // CONSTANTES DE USER PROMPTS (Los datos)
     // ==========================================
@@ -103,6 +121,7 @@ public class AiPromptProvider {
             - Nombre: %s
             - Tipo: %s
             - Fecha de Siembra: %s
+            - Region de cultivo: %s
             %s
             
             Tipo de Análisis solicitado: %s
@@ -140,6 +159,7 @@ public class AiPromptProvider {
             - Nombre: %s
             - Tipo: %s
             - Fecha de Siembra: %s
+            - Region de cultivo: %s
             
             Datos Reales de la Cosecha:
             - Fecha de Cosecha: %s
@@ -193,7 +213,7 @@ public class AiPromptProvider {
             - Nombre: %s
             - Tipo: %s
             - Fecha de Siembra: %s
-            - Altura Máxima Esperada al Cosechar: %s cm
+            - Region de cultivo: %s
             
             Registros Reales de Crecimiento (Del más reciente al más antiguo):
             %s
@@ -201,6 +221,13 @@ public class AiPromptProvider {
             Comentarios del agricultor: %s
             
             Por favor, genera la interpretación de crecimiento y las recomendaciones en formato JSON.
+            """;
+
+    private static final String USER_STAGE_PREDICTION_TEMPLATE = """
+            Por favor, predice la duración en días de cada etapa para el siguiente cultivo:
+            - Nombre del cultivo: %s
+            - Tipo/Variedad: %s
+            - Región de siembra: %s
             """;
 
     // ==========================================
@@ -226,6 +253,7 @@ public class AiPromptProvider {
                 cultivo.getNombreCultivo(),
                 cultivo.getTipoCultivo(),
                 cultivo.getFechaSiembra(),
+                cultivo.getRegion(),
                 plagaContext,
                 request.getTipoAnalisis(),
                 request.getPreguntaAdicional() != null ? request.getPreguntaAdicional() : "Ninguna");
@@ -250,6 +278,7 @@ public class AiPromptProvider {
                 cultivo.getNombreCultivo(),
                 cultivo.getTipoCultivo(),
                 cultivo.getFechaSiembra(),
+                cultivo.getRegion() != null ? cultivo.getRegion() : "No especificada",
                 request.getFechaCosecha(),
                 request.getCantidadCosechada(),
                 request.getCalidadCultivo(),
@@ -281,9 +310,21 @@ public class AiPromptProvider {
                 cultivo.getNombreCultivo(),
                 cultivo.getTipoCultivo(),
                 cultivo.getFechaSiembra(),
-                cultivo.getAlturaEsperada() != null ? cultivo.getAlturaEsperada() : "No especificada",
+                cultivo.getRegion() != null ? cultivo.getRegion() : "No especificada",
                 historialCrecimiento != null && !historialCrecimiento.isBlank() ? historialCrecimiento : "No hay registros de crecimiento disponibles.",
                 preguntaAdicional != null ? preguntaAdicional : "Ninguno"
+        );
+    }
+
+    public String getStagePredictionSystemPrompt() {
+        return SYSTEM_STAGE_PREDICTION_TEMPLATE;
+    }
+
+    public String buildStagePredictionUserPrompt(Cultivo cultivo) {
+        return String.format(USER_STAGE_PREDICTION_TEMPLATE,
+                cultivo.getNombreCultivo(),
+                cultivo.getTipoCultivo(),
+                cultivo.getRegion() != null ? cultivo.getRegion() : "No especificada"
         );
     }
 }

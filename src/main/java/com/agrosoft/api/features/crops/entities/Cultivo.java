@@ -45,20 +45,8 @@ public class Cultivo {
     @Column(name = "notas_generales", columnDefinition = "TEXT")
     private String notasGenerales;
 
-    @Column(name = "altura_esperada", precision = 10, scale = 2)
-    private BigDecimal alturaEsperada;
-
-    @Column(name = "dias_germinacion")
-    private Integer diasGerminacion;
-
-    @Column(name = "dias_vegetativo")
-    private Integer diasVegetativo;
-
-    @Column(name = "dias_floracion")
-    private Integer diasFloracion;
-
-    @Column(name = "dias_cosecha")
-    private Integer diasCosecha;
+    @Column(name = "region", nullable = false)
+    private String region;
 
     @Column(name = "tamano_terreno")
     private Integer tamanoTerreno;

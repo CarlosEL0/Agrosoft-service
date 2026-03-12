@@ -1,5 +1,6 @@
 package com.agrosoft.api.features.crops.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +14,11 @@ public class CultivoRequestDTO {
     private LocalDate fechaSiembra;
     private String notasGenerales;
 
-    private BigDecimal alturaEsperada;
+    @NotNull( message = "La region del cultivo es requerida")
+    private String region;
+
+    private String provincia;
+    private String distrito;
     private Integer diasGerminacion;
     private Integer diasVegetativo;
     private Integer diasFloracion;

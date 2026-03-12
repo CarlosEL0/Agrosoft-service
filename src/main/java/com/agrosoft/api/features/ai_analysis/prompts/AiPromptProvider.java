@@ -103,6 +103,7 @@ public class AiPromptProvider {
             - Nombre: %s
             - Tipo: %s
             - Fecha de Siembra: %s
+            - Region de cultivo: %s
             %s
             
             Tipo de Análisis solicitado: %s
@@ -140,6 +141,7 @@ public class AiPromptProvider {
             - Nombre: %s
             - Tipo: %s
             - Fecha de Siembra: %s
+            - Region de cultivo: %s
             
             Datos Reales de la Cosecha:
             - Fecha de Cosecha: %s
@@ -193,7 +195,7 @@ public class AiPromptProvider {
             - Nombre: %s
             - Tipo: %s
             - Fecha de Siembra: %s
-            - Altura Máxima Esperada al Cosechar: %s cm
+            - Region de cultivo: %s
             
             Registros Reales de Crecimiento (Del más reciente al más antiguo):
             %s
@@ -226,6 +228,7 @@ public class AiPromptProvider {
                 cultivo.getNombreCultivo(),
                 cultivo.getTipoCultivo(),
                 cultivo.getFechaSiembra(),
+                cultivo.getRegion(),
                 plagaContext,
                 request.getTipoAnalisis(),
                 request.getPreguntaAdicional() != null ? request.getPreguntaAdicional() : "Ninguna");
@@ -250,6 +253,7 @@ public class AiPromptProvider {
                 cultivo.getNombreCultivo(),
                 cultivo.getTipoCultivo(),
                 cultivo.getFechaSiembra(),
+                cultivo.getRegion() != null ? cultivo.getRegion() : "No especificada",
                 request.getFechaCosecha(),
                 request.getCantidadCosechada(),
                 request.getCalidadCultivo(),
@@ -281,7 +285,7 @@ public class AiPromptProvider {
                 cultivo.getNombreCultivo(),
                 cultivo.getTipoCultivo(),
                 cultivo.getFechaSiembra(),
-                cultivo.getAlturaEsperada() != null ? cultivo.getAlturaEsperada() : "No especificada",
+                cultivo.getRegion() != null ? cultivo.getRegion() : "No especificada",
                 historialCrecimiento != null && !historialCrecimiento.isBlank() ? historialCrecimiento : "No hay registros de crecimiento disponibles.",
                 preguntaAdicional != null ? preguntaAdicional : "Ninguno"
         );

@@ -4,6 +4,7 @@ import com.agrosoft.api.features.crops.dto.CultivoRequestDTO;
 import com.agrosoft.api.features.crops.entities.Cultivo;
 import com.agrosoft.api.features.crops.services.CultivoService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class CultivoController {
     private final CultivoService cultivoService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Cultivo>> crearCultivo(@RequestBody CultivoRequestDTO request) {
+    public ResponseEntity<ApiResponse<Cultivo>> crearCultivo(@Valid @RequestBody CultivoRequestDTO request) {
         Cultivo nuevoCultivo = cultivoService.crearCultivo(request);
         return new ResponseEntity<>(ApiResponse.success("Cultivo creado exitosamente", nuevoCultivo), HttpStatus.CREATED);
     }
@@ -38,7 +39,7 @@ public class CultivoController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Cultivo>> actualizarCultivo(
             @PathVariable UUID id,
-            @RequestBody CultivoRequestDTO request) {
+            @Valid @RequestBody CultivoRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Cultivo actualizado exitosamente", cultivoService.actualizarCultivo(id, request)));
     }
 

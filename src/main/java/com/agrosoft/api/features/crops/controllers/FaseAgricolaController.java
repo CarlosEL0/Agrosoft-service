@@ -4,6 +4,7 @@ import com.agrosoft.api.features.crops.dto.FaseAgricolaRequestDTO;
 import com.agrosoft.api.features.crops.entities.FaseAgricola;
 import com.agrosoft.api.features.crops.services.FaseAgricolaService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class FaseAgricolaController {
     private final FaseAgricolaService faseAgricolaService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<FaseAgricola>> crearFase(@RequestBody FaseAgricolaRequestDTO request) {
+    public ResponseEntity<ApiResponse<FaseAgricola>> crearFase(@Valid @RequestBody FaseAgricolaRequestDTO request) {
         return new ResponseEntity<>(ApiResponse.success("Fase agrícola creada exitosamente", faseAgricolaService.crearFase(request)), HttpStatus.CREATED);
     }
 
@@ -37,7 +38,7 @@ public class FaseAgricolaController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<FaseAgricola>> actualizarFase(
             @PathVariable UUID id,
-            @RequestBody FaseAgricolaRequestDTO request) {
+            @Valid @RequestBody FaseAgricolaRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Fase actualizada", faseAgricolaService.actualizarFase(id, request)));
     }
 

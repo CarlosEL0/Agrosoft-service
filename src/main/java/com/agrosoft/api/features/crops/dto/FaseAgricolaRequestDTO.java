@@ -1,8 +1,6 @@
 package com.agrosoft.api.features.crops.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -21,8 +19,10 @@ public class FaseAgricolaRequestDTO {
     private String nombreCiclo;
 
     @NotNull(message = "La fecha de inicio es obligatoria")
+    @PastOrPresent(message = "La fecha de inicio debe ser una fecha pasada o presente")
     private LocalDate fechaInicio;
 
+    @Future(message = "La fecha de inicio debe ser una fecha futura")
     private LocalDate fechaFin;
     private String estado;
 }

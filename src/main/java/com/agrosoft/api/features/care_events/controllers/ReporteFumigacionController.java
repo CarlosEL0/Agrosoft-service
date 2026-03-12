@@ -4,6 +4,7 @@ import com.agrosoft.api.features.care_events.dto.ReporteFumigacionRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteFumigacion;
 import com.agrosoft.api.features.care_events.services.ReporteFumigacionService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ReporteFumigacionController {
     private final ReporteFumigacionService fumigacionService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ReporteFumigacion>> crearReporte(@RequestBody ReporteFumigacionRequestDTO request) {
+    public ResponseEntity<ApiResponse<ReporteFumigacion>> crearReporte(@Valid @RequestBody ReporteFumigacionRequestDTO request) {
         return new ResponseEntity<>(ApiResponse.success("Reporte de fumigación creado", fumigacionService.crearReporte(request)), HttpStatus.CREATED);
     }
 
@@ -31,7 +32,7 @@ public class ReporteFumigacionController {
     @PutMapping("/{idFumigacion}")
     public ResponseEntity<ApiResponse<ReporteFumigacion>> actualizarReporte(
             @PathVariable UUID idFumigacion,
-            @RequestBody ReporteFumigacionRequestDTO request) {
+            @Valid @RequestBody ReporteFumigacionRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Reporte actualizado", fumigacionService.actualizarReporte(idFumigacion, request)));
     }
 }

@@ -4,6 +4,7 @@ import com.agrosoft.api.features.care_events.dto.ReportePodaRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReportePoda;
 import com.agrosoft.api.features.care_events.services.ReportePodaService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ReportePodaController {
     private final ReportePodaService podaService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ReportePoda>> crearReporte(@RequestBody ReportePodaRequestDTO request) {
+    public ResponseEntity<ApiResponse<ReportePoda>> crearReporte(@Valid @RequestBody ReportePodaRequestDTO request) {
         return new ResponseEntity<>(ApiResponse.success("Reporte de poda creado", podaService.crearReporte(request)), HttpStatus.CREATED);
     }
 
@@ -31,7 +32,7 @@ public class ReportePodaController {
     @PutMapping("/{idPoda}")
     public ResponseEntity<ApiResponse<ReportePoda>> actualizarReporte(
             @PathVariable UUID idPoda,
-            @RequestBody ReportePodaRequestDTO request) {
+            @Valid @RequestBody ReportePodaRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Reporte actualizado", podaService.actualizarReporte(idPoda, request)));
     }
 }

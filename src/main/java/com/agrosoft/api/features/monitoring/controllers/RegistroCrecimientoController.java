@@ -3,7 +3,8 @@ package com.agrosoft.api.features.monitoring.controllers;
 import com.agrosoft.api.features.monitoring.dto.RegistroCrecimientoRequestDTO;
 import com.agrosoft.api.features.monitoring.dto.RegistroCrecimientoResponseDTO;
 import com.agrosoft.api.features.monitoring.services.RegistroCrecimientoService;
-import com.agrosoft.api.shared.response.ApiResponse; 
+import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class RegistroCrecimientoController {
     private final RegistroCrecimientoService service;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<RegistroCrecimientoResponseDTO>> registrar(@RequestBody RegistroCrecimientoRequestDTO request) {
+    public ResponseEntity<ApiResponse<RegistroCrecimientoResponseDTO>> registrar(@Valid @RequestBody RegistroCrecimientoRequestDTO request) {
         RegistroCrecimientoResponseDTO response = service.registrarCrecimiento(request);
         return new ResponseEntity<>(ApiResponse.success("Registro de crecimiento creado exitosamente", response), HttpStatus.CREATED);
     }
@@ -40,7 +41,7 @@ public class RegistroCrecimientoController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<RegistroCrecimientoResponseDTO>> actualizar(
             @PathVariable UUID id,
-            @RequestBody RegistroCrecimientoRequestDTO request) {
+            @Valid @RequestBody RegistroCrecimientoRequestDTO request) {
         RegistroCrecimientoResponseDTO response = service.actualizarRegistro(id, request);
         return ResponseEntity.ok(ApiResponse.success("Registro actualizado exitosamente", response));
     }

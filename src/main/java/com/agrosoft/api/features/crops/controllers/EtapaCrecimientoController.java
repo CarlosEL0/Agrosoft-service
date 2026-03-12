@@ -4,6 +4,7 @@ import com.agrosoft.api.features.crops.dto.EtapaCrecimientoRequestDTO;
 import com.agrosoft.api.features.crops.entities.EtapaCrecimiento;
 import com.agrosoft.api.features.crops.services.EtapaCrecimientoService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class EtapaCrecimientoController {
     private final EtapaCrecimientoService etapaService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<EtapaCrecimiento>> crearEtapa(@RequestBody EtapaCrecimientoRequestDTO request) {
+    public ResponseEntity<ApiResponse<EtapaCrecimiento>> crearEtapa(@Valid  @RequestBody EtapaCrecimientoRequestDTO request) {
         return new ResponseEntity<>(ApiResponse.success("Etapa creada exitosamente", etapaService.crearEtapa(request)), HttpStatus.CREATED);
     }
 
@@ -37,7 +38,7 @@ public class EtapaCrecimientoController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<EtapaCrecimiento>> actualizarEtapa(
             @PathVariable UUID id,
-            @RequestBody EtapaCrecimientoRequestDTO request) {
+            @Valid @RequestBody EtapaCrecimientoRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Etapa actualizada", etapaService.actualizarEtapa(id, request)));
     }
 

@@ -4,6 +4,7 @@ import com.agrosoft.api.features.auth.dto.AuthRequestDTO;
 import com.agrosoft.api.features.auth.dto.AuthResponseDTO;
 import com.agrosoft.api.features.auth.services.AuthService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponseDTO>> login(@RequestBody AuthRequestDTO request) {
+    public ResponseEntity<ApiResponse<AuthResponseDTO>> login(@Valid @RequestBody AuthRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Login exitoso", authService.login(request)));
     }
 }

@@ -4,6 +4,7 @@ import com.agrosoft.api.features.monitoring.dto.IrregularidadRequestDTO;
 import com.agrosoft.api.features.monitoring.dto.IrregularidadResponseDTO;
 import com.agrosoft.api.features.monitoring.services.IrregularidadService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class IrregularidadController {
     private final IrregularidadService service;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<IrregularidadResponseDTO>> reportar(@RequestBody IrregularidadRequestDTO request) {
+    public ResponseEntity<ApiResponse<IrregularidadResponseDTO>> reportar(@Valid @RequestBody IrregularidadRequestDTO request) {
         return new ResponseEntity<>(ApiResponse.success("Irregularidad reportada", service.reportarIrregularidad(request)), HttpStatus.CREATED);
     }
 
@@ -43,7 +44,7 @@ public class IrregularidadController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<IrregularidadResponseDTO>> actualizar(
             @PathVariable UUID id,
-            @RequestBody IrregularidadRequestDTO request) {
+            @Valid @RequestBody IrregularidadRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Irregularidad actualizada", service.actualizarIrregularidad(id, request)));
     }
 

@@ -4,6 +4,7 @@ import com.agrosoft.api.features.care_events.dto.ReporteRiegoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.ReporteRiego;
 import com.agrosoft.api.features.care_events.services.ReporteRiegoService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ReporteRiegoController {
     private final ReporteRiegoService riegoService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ReporteRiego>> crearReporte(@RequestBody ReporteRiegoRequestDTO request) {
+    public ResponseEntity<ApiResponse<ReporteRiego>> crearReporte(@Valid @RequestBody ReporteRiegoRequestDTO request) {
         return new ResponseEntity<>(ApiResponse.success("Reporte de riego creado exitosamente", riegoService.crearReporte(request)), HttpStatus.CREATED);
     }
 
@@ -31,7 +32,7 @@ public class ReporteRiegoController {
     @PutMapping("/{idRiego}")
     public ResponseEntity<ApiResponse<ReporteRiego>> actualizarReporte(
             @PathVariable UUID idRiego,
-            @RequestBody ReporteRiegoRequestDTO request) {
+            @Valid @RequestBody ReporteRiegoRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Reporte actualizado", riegoService.actualizarReporte(idRiego, request)));
     }
 }

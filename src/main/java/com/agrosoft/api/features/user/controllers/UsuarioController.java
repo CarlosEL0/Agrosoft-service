@@ -5,6 +5,7 @@ import com.agrosoft.api.features.user.dto.UsuarioResponseDTO;
 import com.agrosoft.api.features.user.services.UsuarioService;
 import com.agrosoft.api.features.user.dto.UsuarioUpdateDTO;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,9 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<UsuarioResponseDTO>> registrar(@RequestBody UsuarioRequestDTO request) {
+    public ResponseEntity<ApiResponse<UsuarioResponseDTO>> registrar(
+            @Valid
+            @RequestBody UsuarioRequestDTO request) {
         UsuarioResponseDTO response = usuarioService.registrarUsuario(request);
         return new ResponseEntity<>(ApiResponse.success("Usuario registrado exitosamente", response), HttpStatus.CREATED);
     }
@@ -38,6 +41,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<UsuarioResponseDTO>> actualizar(
+            @Valid
             @PathVariable UUID id,
             @RequestBody UsuarioUpdateDTO updateDTO) {
         return ResponseEntity.ok(ApiResponse.success("Usuario actualizado exitosamente", usuarioService.actualizarUsuario(id, updateDTO)));

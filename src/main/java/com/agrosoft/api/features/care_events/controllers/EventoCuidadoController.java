@@ -4,6 +4,7 @@ import com.agrosoft.api.features.care_events.dto.EventoCuidadoRequestDTO;
 import com.agrosoft.api.features.care_events.entities.EventoCuidado;
 import com.agrosoft.api.features.care_events.services.EventoCuidadoService;
 import com.agrosoft.api.shared.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class EventoCuidadoController {
     private final EventoCuidadoService eventoService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<EventoCuidado>> crearEvento(@RequestBody EventoCuidadoRequestDTO request) {
+    public ResponseEntity<ApiResponse<EventoCuidado>> crearEvento(@Valid @RequestBody EventoCuidadoRequestDTO request) {
         return new ResponseEntity<>(ApiResponse.success("Evento registrado", eventoService.crearEvento(request)), HttpStatus.CREATED);
     }
 
@@ -44,7 +45,7 @@ public class EventoCuidadoController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<EventoCuidado>> actualizarEvento(
             @PathVariable UUID id,
-            @RequestBody EventoCuidadoRequestDTO request) {
+            @Valid @RequestBody EventoCuidadoRequestDTO request) {
         return ResponseEntity.ok(ApiResponse.success("Evento actualizado", eventoService.actualizarEvento(id, request)));
     }
 

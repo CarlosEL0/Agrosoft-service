@@ -27,15 +27,16 @@ public class CultivoRequestDTO {
     private String region;
 
     @NotNull(message = "El tamaño del terreno es obligatorio")
+    @Positive(message = "El tamaño del terreno debe ser positiva")
     private Integer tamanoTerreno;
 
     @NotNull(message = "La cantidad de semillas es obligatoria")
     @Min(value = 1, message = "La cantidad de semillas debe ser mayor o igual a 1")
     private Integer cantidadSemillas;
 
-    @NegativeOrZero(message = "El PH minimo no puede ser negativo")
+    @PositiveOrZero(message = "El PH minimo no puede ser negativo")
     private BigDecimal phSueloMin;
 
-    @NegativeOrZero(message = "El PH maximo no puede ser negativo")
+    @PositiveOrZero(message = "El PH maximo no puede ser negativo")
     private BigDecimal phSueloMax;
 }

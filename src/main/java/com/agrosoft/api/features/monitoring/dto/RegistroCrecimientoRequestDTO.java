@@ -1,6 +1,5 @@
 package com.agrosoft.api.features.monitoring.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
@@ -12,7 +11,7 @@ import java.util.UUID;
 @Data
 public class RegistroCrecimientoRequestDTO {
 
-    @NotBlank(message = "El idCultivo es obligatorio")
+    @NotNull(message = "El idCultivo es obligatorio")
     private UUID idCultivo;
 
     private UUID idEtapa;

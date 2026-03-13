@@ -24,5 +24,7 @@ public class IrregularidadRequestDTO {
     private String severidad;
 
     private String estado;
+
+    @NotBlank(message = "Se debe de poner una descripcion")
     private String descripcion;
 }

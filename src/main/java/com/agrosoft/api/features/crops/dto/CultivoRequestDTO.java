@@ -17,16 +17,16 @@ public class CultivoRequestDTO {
 
     private String tipoCultivo;
 
-    @NotBlank( message = "La fecha de siembra es requerida")
+    @NotNull( message = "La fecha de siembra es requerida")
     @PastOrPresent( message = "La fecha de siembra no puede ser en el futuro")
     private LocalDate fechaSiembra;
 
     private String notasGenerales;
 
-    @NotNull( message = "La region del cultivo es requerida")
+    @NotBlank( message = "La region del cultivo es requerida")
     private String region;
 
-    @NotBlank(message = "El tamaño del terreno es obligatorio")
+    @NotNull(message = "El tamaño del terreno es obligatorio")
     private Integer tamanoTerreno;
 
     @NotNull(message = "La cantidad de semillas es obligatoria")

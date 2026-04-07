@@ -153,4 +153,14 @@ public class FaseAgricolaServiceImpl implements FaseAgricolaService {
         obtenerPorId(id);
         faseAgricolaRepository.deleteById(id);
     }
+
+    @Override
+    public Map<String, Integer> predecirEtapas(String nombreCultivo, String tipoCultivo, String region) {
+        Cultivo cultivoMock = Cultivo.builder()
+                .nombreCultivo(nombreCultivo)
+                .tipoCultivo(tipoCultivo)
+                .region(region)
+                .build();
+        return predecirDiasConIA(cultivoMock);
+    }
 }

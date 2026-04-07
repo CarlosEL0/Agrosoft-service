@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -46,5 +47,13 @@ public class FaseAgricolaController {
     public ResponseEntity<ApiResponse<Void>> eliminarFase(@PathVariable UUID id) {
         faseAgricolaService.eliminarFase(id);
         return ResponseEntity.ok(ApiResponse.success("Fase eliminada correctamente"));
+    }
+
+    @GetMapping("/predecir-etapas")
+    public ResponseEntity<ApiResponse<Map<String, Integer>>> predecirEtapas(
+            @RequestParam String nombre,
+            @RequestParam String tipo,
+            @RequestParam(required = false) String region) {
+        return ResponseEntity.ok(ApiResponse.success("Predicción generada", faseAgricolaService.predecirEtapas(nombre, tipo, region)));
     }
 }

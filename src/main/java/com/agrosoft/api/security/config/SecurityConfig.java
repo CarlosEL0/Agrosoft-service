@@ -22,13 +22,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                // Configuramos la aplicación como Stateless (sin estado de sesión de servidor)
+                .cors(org.springframework.security.config.Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)   // Deshabilitado: API Stateless con PASETO, CSRF no aplica
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
                         .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/notificaciones/check-etapas").permitAll()
                         // Cualquier otra petición debe estar autenticada
                         .anyRequest().authenticated()
                 )

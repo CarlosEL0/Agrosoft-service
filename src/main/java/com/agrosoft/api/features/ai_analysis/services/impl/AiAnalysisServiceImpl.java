@@ -37,7 +37,7 @@ public class AiAnalysisServiceImpl implements AiAnalysisService {
 
     private final GroqClient groqClient;
     private final CultivoRepository cultivoRepository;
-    private final IrregularidadRepository irregularidadRepository; // Ya existe porque hicimos el merge
+    private final IrregularidadRepository irregularidadRepository;
     private final AnalisisIaRepository analisisIaRepository;
     private final RecomendacionRepository recomendacionRepository;
     private final AiPromptProvider promptProvider;

@@ -27,6 +27,18 @@ ALTER TABLE cultivo
 ALTER TABLE reporte_poda
     ADD CONSTRAINT chk_poda_porcentaje CHECK (porcentaje_podado > 0 AND porcentaje_podado <= 100);
 
+-- =========================================================================
+-- LIMPIEZA DE DATOS EN PRODUCCIÓN (Migración de estado)
+-- =========================================================================
+-- 1. Estandarizar "Activa" a minúsculas
+UPDATE irregularidad SET estado = 'activa' WHERE estado = 'Activa' OR estado IS NULL;
+
+-- 2. Convertir el texto viejo "En tratamiento" al nuevo estándar "tratada"
+UPDATE irregularidad SET estado = 'tratada' WHERE estado = 'En tratamiento';
+
+-- 3. Estandarizar "Resuelta" a minúsculas
+UPDATE irregularidad SET estado = 'resuelta' WHERE estado = 'Resuelta';
+
 -- Validar estados permitidos en irregularidades (Catálogo estricto)
 ALTER TABLE irregularidad
     ADD CONSTRAINT chk_irregularidad_estado CHECK (estado IN ('activa', 'tratada', 'resuelta'));
